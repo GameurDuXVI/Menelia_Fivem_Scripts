@@ -5,7 +5,6 @@ using CitizenFX.Core;
 using CitizenFX.Core.UI;
 using NativeUI;
 using static CitizenFX.Core.Native.API;
-using MeneliaAPI.Client;
 
 namespace AdminMenus
 {

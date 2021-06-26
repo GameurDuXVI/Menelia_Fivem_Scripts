@@ -9,6 +9,14 @@ using MeneliaAPI.Entities;
 
 namespace MeneliaAPI.Client
 {
+    public class UpdateClientUtils
+    {
+        public static void sendToAllCLients(String channel, params Object[] objects)
+        {
+            BaseScript.TriggerServerEvent("MeneliaAPI:UpdateClient", channel, objects);
+        }
+    }
+
     public class ClientInfoUtils : BaseScript
     {
         public static void SendChatMessage(string title, string message, int r, int g, int b)

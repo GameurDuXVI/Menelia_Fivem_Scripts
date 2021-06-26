@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static CitizenFX.Core.Native.API;
-using MeneliaAPI.Client;
 using CitizenFX.Core.UI;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;

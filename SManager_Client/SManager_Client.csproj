@@ -31,17 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CitizenFX.Core">
-      <HintPath>G:\Projets\Menelia\Fivem\libraries\client\CitizenFX.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="MeneliaAPI_Client.net">
-      <HintPath>..\..\MeneliaAPI Client\MeneliaAPI Client\bin\Debug\MeneliaAPI_Client.net.dll</HintPath>
-    </Reference>
-    <Reference Include="MeneliaAPI_Entities.net">
-      <HintPath>..\..\MeneliaAPI Entities\MeneliaAPI Entities\bin\Debug\MeneliaAPI_Entities.net.dll</HintPath>
-    </Reference>
-    <Reference Include="PlayerAPI.net">
-      <HintPath>G:\Projets\Menelia\Fivem\PlayerAPI\PlayerAPI\bin\Debug\PlayerAPI.net.dll</HintPath>
+    <Reference Include="CitizenFX.Core.Client">
+      <HintPath>..\libs\CitizenFX.Core.Client.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

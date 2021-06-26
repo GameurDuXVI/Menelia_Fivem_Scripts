@@ -21,7 +21,18 @@ using MeneliaAPI.Entities;
 
 namespace MeneliaAPI.Server
 {
+    public class UpdateClientUtils : BaseScript
+    {
+        public UpdateClientUtils()
+        {
+            EventHandlers["MeneliaAPI:UpdateClient"] += new Action<String, Object[]>(returnToClient);
+        }
 
+        private void returnToClient(String channel, Object[] objects)
+        {
+            TriggerClientEvent(channel, objects);
+        }
+    }
     public class ServerInfoUtils
     {
         private static List<PlayerInfo> playerInfos = new List<PlayerInfo>();

@@ -31,17 +31,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CitizenFX.Core">
-      <HintPath>G:\Projets\Menelia\Fivem\libraries\server\CitizenFX.Core.dll</HintPath>
+    <Reference Include="CitizenFX.Core.Server">
+      <HintPath>..\libs\CitizenFX.Core.Server.dll</HintPath>
     </Reference>
-    <Reference Include="MeneliaAPI_Entities.net">
-      <HintPath>..\..\MeneliaAPI Entities\MeneliaAPI Entities\bin\Debug\MeneliaAPI_Entities.net.dll</HintPath>
+    <Reference Include="MeneliaAPI_Entities.net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MeneliaAPI Entities\bin\Debug\MeneliaAPI_Entities.net.dll</HintPath>
     </Reference>
-    <Reference Include="MeneliaAPI_Server.net">
-      <HintPath>..\..\MeneliaAPI Server\MeneliaAPI Server\bin\Debug\MeneliaAPI_Server.net.dll</HintPath>
-    </Reference>
-    <Reference Include="PlayerAPI.net">
-      <HintPath>G:\Projets\Menelia\Fivem\PlayerAPI\PlayerAPI\bin\Debug\PlayerAPI.net.dll</HintPath>
+    <Reference Include="MeneliaAPI_Server.net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MeneliaAPI Server\bin\Debug\MeneliaAPI_Server.net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

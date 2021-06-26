@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
-using MeneliaAPI.Entities;
 
 namespace SManager_CLient
 {
