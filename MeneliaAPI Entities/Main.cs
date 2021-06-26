@@ -8,6 +8,8 @@ namespace MeneliaAPI.Entities
 {
     public class PlayerInfo
     {
+
+
         public List<String> identifiers;
         public String name;
         public float x;
