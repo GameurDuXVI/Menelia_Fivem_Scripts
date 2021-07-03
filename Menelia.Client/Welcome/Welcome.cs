@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CitizenFX.Core;
 
-namespace MeneliaAPI_Entities.EntityInfos
+namespace Menelia.Client.Welcome
 {
-    public class NPCInfo
+    class Welcome : BaseScript
     {
 
     }

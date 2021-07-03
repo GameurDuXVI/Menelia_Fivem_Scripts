@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SManager_Server")]
+[assembly: AssemblyTitle("Menelia.Server")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SManager_Server")]
+[assembly: AssemblyProduct("Menelia.Server")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("2a989ae2-9b75-4439-a366-7c5f1cd6c8ed")]
+[assembly: Guid("79ce604e-a371-454a-8dfe-9a8e0c726428")]
 
 // Version information for an assembly consists of the following four values:
 //

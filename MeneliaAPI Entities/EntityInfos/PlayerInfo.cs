@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MeneliaAPI.Entities
 {
@@ -27,13 +29,33 @@ namespace MeneliaAPI.Entities
         public static int NextId()
         {
             for(int i = 0; ; i++)
-                if (playerInfos[i] == null)
+                if (playerInfos.ElementAtOrDefault(i) == null)
                     return i;
         }
 
         public static PlayerInfo GetPlayerInfo(int Id)
         {
             return playerInfos[Id];
+        }
+
+        public String ToJson()
+        {
+            return JsonConvert.SerializeObject(this); 
+        }
+
+        public static PlayerInfo FromJson(String json)
+        {
+            return JsonConvert.DeserializeObject<PlayerInfo>(json);
+        }
+
+        public static String ListToJson()
+        {
+            return JsonConvert.SerializeObject(playerInfos);
+        }
+
+        public static List<PlayerInfo> ListFromJson(String json)
+        {
+            return JsonConvert.DeserializeObject<List<PlayerInfo>>(json);
         }
     }
 }

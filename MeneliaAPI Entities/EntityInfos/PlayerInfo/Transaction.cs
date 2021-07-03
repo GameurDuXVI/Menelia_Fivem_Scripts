@@ -9,9 +9,15 @@ namespace MeneliaAPI.Entities
 {
     public class Transaction
     {
-        public Transaction(ref EntityInfo from, ref EntityInfo to)
-        {
+        DateTime date;
+        String description;
+        int amount;
 
+        public Transaction(DateTime date, String description, int amount)
+        {
+            this.date = date;
+            this.description = description;
+            this.amount = amount;
         }
     }
 }

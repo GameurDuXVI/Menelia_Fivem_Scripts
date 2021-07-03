@@ -1,57 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
-using static CitizenFX.Core.Native.API;
 using MeneliaAPI.Entities;
+using CitizenFX.Core.Native;
 
 namespace MeneliaAPI.Server
 {
-    public class UpdateClientUtils : BaseScript
+
+    public class ServerUtils
     {
-        public UpdateClientUtils()
+        public static List<PlayerInfo> GetPlayerInfos()
         {
-            EventHandlers["MeneliaAPI:UpdateClient"] += new Action<String, Object[]>(returnToClient);
+            return PlayerInfo.playerInfos;
         }
 
-        private void returnToClient(String channel, Object[] objects)
+        public static void loadPlayersInfo()
         {
-            TriggerClientEvent(channel, objects);
+            if (File.Exists("data.json"))
+            {
+                String json = File.ReadAllText("data.json");
+                if (json.Length > 0)
+                    PlayerInfo.playerInfos = PlayerInfo.ListFromJson(json);
+            }
+            else
+            {
+                SavePlayersInfo();
+            }
         }
-    }
-    public class ServerInfoUtils
-    {
-        private static List<PlayerInfo> playerInfos = new List<PlayerInfo>();
 
-        public static List<PlayerInfo> getPlayerInfos()
+        public static void SavePlayersInfo()
         {
-            return playerInfos;
-        }
-
-        public static void save()
-        {
-
+            File.WriteAllText("data.json", PlayerInfo.ListToJson());
         }
 
         public static bool hasPlayerInfo(String name)
         {
-            foreach (PlayerInfo playerInfo in playerInfos)
+            foreach (PlayerInfo playerInfo in GetPlayerInfos())
             {
-                if (playerInfo.name == name)
+                if (playerInfo.Name == name)
                 {
                     return true;
                 }
@@ -61,9 +51,9 @@ namespace MeneliaAPI.Server
 
         public static PlayerInfo getPlayerInfo(String name)
         {
-            foreach (PlayerInfo playerInfo in playerInfos)
+            foreach (PlayerInfo playerInfo in GetPlayerInfos())
             {
-                if (playerInfo.name == name)
+                if (playerInfo.Name == name)
                 {
                     return playerInfo;
                 }
@@ -73,9 +63,9 @@ namespace MeneliaAPI.Server
 
         public static bool hasPlayerInfoByIdentiefier(String identifier)
         {
-            foreach (PlayerInfo playerInfo in playerInfos)
+            foreach (PlayerInfo playerInfo in GetPlayerInfos())
             {
-                if (playerInfo.identifiers.Contains(identifier))
+                if (playerInfo.Identifiers.Contains(identifier))
                 {
                     return true;
                 }
@@ -85,9 +75,9 @@ namespace MeneliaAPI.Server
 
         public static PlayerInfo getPlayerInfoByIdentiefier(String identifier)
         {
-            foreach (PlayerInfo playerInfo in playerInfos)
+            foreach (PlayerInfo playerInfo in GetPlayerInfos())
             {
-                if (playerInfo.identifiers.Contains(identifier))
+                if (playerInfo.Identifiers.Contains(identifier))
                 {
                     return playerInfo;
                 }
@@ -118,10 +108,8 @@ namespace MeneliaAPI.Server
             }
             return null;
         }
-    }
 
-    public class ServerPlayersUtils
-    {
+
         private static PlayerList pl = new PlayerList();
         public static void SendChatMessage(string title, string message, int r, int g, int b)
         {
@@ -156,11 +144,22 @@ namespace MeneliaAPI.Server
             }
             return null;
         }
-        public static bool isOnline(String name)
+        public static bool isOnline(int serverId)
         {
             foreach (Player p in pl)
             {
-                if (p.Name.Equals(name))
+                if (p.Handle.Equals(serverId.ToString()))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static bool isOnlineByHandle(String handle)
+        {
+            foreach (Player p in pl)
+            {
+                if (p.Handle.Equals(handle))
                 {
                     return true;
                 }
@@ -189,5 +188,3 @@ namespace MeneliaAPI.Server
         }
     }
 }
-
-

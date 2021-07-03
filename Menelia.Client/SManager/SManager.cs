@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 
-namespace SManager_CLient
+namespace SManager.Client
 {
     public class SManager : BaseScript
     {
@@ -19,7 +19,7 @@ namespace SManager_CLient
             TriggerServerEvent("SManager:SpawningReady", GetPlayerServerId(PlayerId()));
 
             Tick += onTick1000;
-            Tick += onTick5000;
+            Tick += onTick30000;
         }
         
 
@@ -122,9 +122,9 @@ namespace SManager_CLient
             }
         }
 
-        public async Task onTick5000()
+        public async Task onTick30000()
         {
-            await Delay(5000);
+            await Delay(30000);
 
             Vector3 v = Game.Player.Character.Position;
             TriggerServerEvent("SManager:save", GetPlayerServerId(PlayerId()), v.X, v.Y, v.Z);;
