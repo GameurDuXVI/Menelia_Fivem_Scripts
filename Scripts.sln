@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminMenus", "AdminMenus\AdminMenus.csproj", "{5E48C490-1DD7-44A6-A265-8E9484A4B8E8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeneliaAPI Entities", "MeneliaAPI Entities\MeneliaAPI Entities.csproj", "{7E5498F7-F6D4-4D20-BA10-1C016C9E79F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menelia.Client", "Menelia.Client\Menelia.Client.csproj", "{132B0EE0-BF81-4165-B3F0-E887C240231D}"
@@ -17,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5E48C490-1DD7-44A6-A265-8E9484A4B8E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E48C490-1DD7-44A6-A265-8E9484A4B8E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E48C490-1DD7-44A6-A265-8E9484A4B8E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E48C490-1DD7-44A6-A265-8E9484A4B8E8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E5498F7-F6D4-4D20-BA10-1C016C9E79F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7E5498F7-F6D4-4D20-BA10-1C016C9E79F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E5498F7-F6D4-4D20-BA10-1C016C9E79F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
