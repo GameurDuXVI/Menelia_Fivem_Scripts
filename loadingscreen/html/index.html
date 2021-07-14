@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <audio autoplay id="audio" src="./Beatwalker_The_Calling_Royalty_Free_No_Copyright_Music_EDM_Chill_Tropical_House_Progressive.mp3"></audio>
+    <script>
+        var vid = document.getElementById("audio");
+        vid.volume = 0.4;
+    </script>
+    <img src="logo.svg" id="logo" alt="">
+    <div id="bottom">
+    </div>
+    <span id="loading-text">Chargement</span>
+    <span id="loading-text-desc"></span>
+    <div class="lds-facebook"><div></div><div></div><div></div></div>
+    <script>
+        var count = 0;
+var thisCount = 0;
+
+const emoji = {
+    INIT_BEFORE_MAP_LOADED: [ '🍉' ],
+    INIT_AFTER_MAP_LOADED: [ '🍋', '🍊' ],
+    INIT_SESSION: [ '🍐', '🍅', '🍆' ],
+};
+
+let type = "";
+let advance = "";
+let timer = false;
+
+function update(){
+    document.querySelector('#loading-text-desc').innerHTML = (type.length > 0? type + ": " : "") + advance;
+}
+
+const handlers = {
+    startInitFunctionOrder(data)
+    {
+        count = data.count;
+
+        type = data.type + " phase " + data.order;
+        update();
+        //document.querySelector('#loading-text-desc').innerHTML = data.type + " PHASE " + data.order;
+        //document.querySelector('#t1').innerHTML += emoji[data.type][data.order - 1] || '';
+    },
+
+    initFunctionInvoking(data)
+    {
+        //console.log("2: " + ((data.idx / count) * 100) + '%');
+        if(count !== Infinity)
+            advance = Math.round(((data.idx / count) * 100)) + '%';
+        update();
+        //document.querySelector('#loading-text-desc').innerHTML = ((data.idx / count) * 100) + '%';
+        //document.querySelector('#t2').style.left = '0%';
+        //document.querySelector('#t2').style.width = ((data.idx / count) * 100) + '%';
+    },
+
+    startDataFileEntries(data)
+    {
+        count = data.count;
+
+        //console.log("3");
+        //document.querySelector('#t1').innerHTML += "\u{1f358}";
+    },
+
+    performMapLoadFunction(data)
+    {
+        ++thisCount;
+
+        if(count !== Infinity)
+            advance = Math.round(((thisCount / count) * 100)) + '%';
+        update();
+        //document.querySelector('#loading-text-desc').innerHTML = ((thisCount / count) * 100) + '%';
+        //console.log("4: " + ((thisCount / count) * 100) + '%');
+        //document.querySelector('#t2').style.left = '0%';
+        //document.querySelector('#t2').style.width = ((thisCount / count) * 100) + '%';
+    },
+
+    onLogLine(data)
+    {
+
+        advance = data.message;
+        update();
+        //document.querySelector('#loading-text-desc').innerHTML = data.message + "..!"
+        //console.log("5: " + data.message + "..!");
+        //document.querySelector('#t3').innerHTML = data.message + "..!";
+    }
+};
+
+window.addEventListener('message', function(e)
+{
+    (handlers[e.data.eventName] || function() {})(e.data);
+});
+    </script>
+</body>
+</html>

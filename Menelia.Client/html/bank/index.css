@@ -1,0 +1,293 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap');
+html,
+body {
+    height: 60vh;
+    width: 100vw;
+}
+
+#bank-main {
+    margin: auto;
+    position: absolute;
+    width: 960px;
+    height: 540px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #F5F5F5;
+    border-radius: 30px;
+    box-shadow: 0 30px 40px rgba(0, 0, 0, .3);
+    border: solid 2px rgba(0, 0, 0, .03);
+    padding: 20px 20px;
+}
+
+#bank-main-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 100px auto;
+    grid-template-areas: "nav" "main";
+}
+
+/**
+Nav
+*/
+
+#bank-nav {
+    grid-area: nav;
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: auto;
+}
+
+#bank-close:hover, #bank-close:hover > *, #bank-back:hover, #bank-back:hover > * {
+    cursor: pointer;
+    fill: black;
+}
+
+/**
+Common
+*/
+
+.text {
+    text-transform: uppercase;
+    display: block;
+    padding: 15px;
+    padding-right: 0;
+    text-align: right;
+}
+
+.text-value {
+    text-transform: initial;
+    color: #835AB8;
+}
+
+a {
+    display: block;
+    text-decoration: none;
+}
+
+a[disabled]{
+    background-color: rgb(192, 192, 192);
+}
+
+a:hover:not([disabled]) {
+    color: white;
+    background-color: #835AB8;
+}
+
+a:hover:not([disabled]) svg > * {
+    fill: white;
+}
+
+.button-smaller, .button, .button-larger {
+    color: black;
+    background-color: white;
+    border-radius: 10px;
+    text-align: center;
+    padding: 25px;
+    font-size: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+}
+
+.button-larger {
+    padding-top: 35px;
+    padding-bottom: 35px;
+}
+
+.button-smaller {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.input, .dropdown {
+    border-radius: 5px;
+    border: solid rgba(0, 0, 0, .1) 1px;
+    width: calc(100% - 20px);
+    padding: 10px;
+}
+
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.dropdown:focus + .dropdown-list,.dropdown-list:hover {
+    display: block;
+}
+
+.dropdown-list {
+    background-color: white;
+    display: none;
+    position: absolute;
+    height: 100px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: solid 1px darkgray;
+}
+
+.scrollbar::-webkit-scrollbar, .dropdown-list::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+.scrollbar::-webkit-scrollbar-track, .dropdown-list::-webkit-scrollbar-track {
+    /*background: #f1f1f1; */
+    background: white;
+}
+
+/* Handle */
+.scrollbar::-webkit-scrollbar-thumb, .dropdown-list::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+.scrollbar::-webkit-scrollbar-thumb:hover, .dropdown-list::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+}
+
+table {
+    width: 100%;
+}
+
+table th {
+    color: #959595;
+    text-align: left;
+    padding: 0.5em 0px;
+}
+
+table td {
+    padding: 4px;
+}
+
+.title {
+    font-size: 15pt;
+    color: black;
+    background-color: white;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+    border-radius: 10px;
+    padding: 20px 25px;
+    display: flex;
+    max-height: 1em;
+}
+
+
+.title > span {
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 1em;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: white;
+    background-color: rgba(85, 95, 119, 1);
+    border-radius: 10px;
+    padding: 2px;
+    display: flex;
+    max-height: 20px;
+    margin: 5px 0;
+    overflow: hidden;
+    box-shadow: 0 30px 40px rgba(0, 0, 0, .3);
+}
+
+/**
+Pages
+*/
+
+#bank-page-container {
+    grid-area: main;
+}
+
+#bank-page-container > div {
+    height: 100%;
+    width: 100%;
+}
+
+#bank-main-page {
+    display: grid;
+    grid-template-columns: auto auto 300px;
+    grid-template-rows: 25% auto 160px;
+    grid-template-areas: "retrait depot virement" "historique historique stats" "historique historique bankcard";
+}
+
+#bank-main-page > div {
+    padding: 10px;
+}
+
+#bank-page-withdrawal, #bank-page-deposit {
+    display: grid;
+    grid-template-columns: 33% 33% auto;
+    grid-template-rows: 25% 30% auto;
+    grid-template-areas: "title title title" "bt1 bt2 bt3" "bt4 bt5 bt6";
+}
+
+#bank-page-transfer {
+    display: grid;
+    grid-template-columns: calc(50% - 125px) 100px 50px 100px calc(50% - 125px);
+    grid-template-rows: 90px auto 60px;
+    grid-template-areas: "title title title title title" "sender sender . receiver receiver" ". button_person button_person button_person .";
+}
+
+/**
+HTML default
+*/
+
+*[hidden] {
+    display: none !important;
+}
+
+.rubik-medium {
+    font-weight: 500;
+}
+
+* {
+    font-family: Rubik , sans-serif !important;
+}
+
+h1 {
+    display: block;
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h2 {
+    display: block;
+    font-size: 1.5em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h3 {
+    display: block;
+    font-size: 1.17em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h4 {
+    display: block;
+    margin-top: 1.33em;
+    margin-bottom: 1.33em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}

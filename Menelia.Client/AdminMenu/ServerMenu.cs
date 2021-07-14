@@ -8,7 +8,7 @@ using static CitizenFX.Core.Native.API;
 using CitizenFX.Core.UI;
 using NativeUI;
 
-namespace AdminMenus
+namespace Menelia.Client.AdminMenu
 {
     class ServerMenu
     {
@@ -52,7 +52,20 @@ namespace AdminMenus
             List<dynamic> hours = new List<dynamic>();
             for (int i = 0; i < 24; i++) hours.Add(i);
 
-            var hourItem = new UIMenuListItem("Heure", hours, hours.IndexOf(World.CurrentDate.Hour));
+            var current_hour = 0;
+
+            try
+            {
+                current_hour = hours.IndexOf(World.CurrentDate.Hour);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                Debug.WriteLine(e.StackTrace);
+            }
+
+
+            var hourItem = new UIMenuListItem("Heure", hours, current_hour);
             menu.AddItem(hourItem);
             menu.OnListChange += (sender, item, index) =>
             {
@@ -65,9 +78,21 @@ namespace AdminMenus
             };
 
             List<dynamic> minutes = new List<dynamic>();
-            for (int i = 0; i < 24; i++) minutes.Add(i);
+            for (int i = 0; i < 60; i++) minutes.Add(i);
 
-            var minutesItem = new UIMenuListItem("Minutes", hours, hours.IndexOf(World.CurrentDate.Minute));
+            var current_minute = 0;
+
+            try
+            {
+                current_minute = minutes.IndexOf(World.CurrentDate.Minute);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                Debug.WriteLine(e.StackTrace);
+            }
+
+            var minutesItem = new UIMenuListItem("Minutes", minutes, current_minute);
             menu.AddItem(minutesItem);
             menu.OnListChange += (sender, item, index) =>
             {

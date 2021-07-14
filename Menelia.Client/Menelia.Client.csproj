@@ -34,8 +34,15 @@
     <Reference Include="CitizenFX.Core.Client">
       <HintPath>..\libs\CitizenFX.Core.Client.dll</HintPath>
     </Reference>
+    <Reference Include="MeneliaAPI_Entities.net">
+      <HintPath>..\MeneliaAPI Entities\bin\Debug\MeneliaAPI_Entities.net.dll</HintPath>
+    </Reference>
     <Reference Include="NativeUI">
       <HintPath>..\libs\NativeUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,10 +61,12 @@
     <Compile Include="AdminMenu\ServerMenu.cs" />
     <Compile Include="AdminMenu\Vehicles.cs" />
     <Compile Include="AdminMenu\VehiclesMenu.cs" />
+    <Compile Include="AdminMenu\Waypoints.cs" />
     <Compile Include="AdminMenu\Weapons.cs" />
     <Compile Include="CallbackClasses.cs" />
     <Compile Include="ClientUtils.cs" />
     <Compile Include="BankNUI\Main.cs" />
+    <Compile Include="CommonNUI\Common.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SManager\SManager.cs" />
     <Compile Include="Welcome\Welcome.cs" />

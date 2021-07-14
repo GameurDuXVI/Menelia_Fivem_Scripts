@@ -10,7 +10,7 @@ using CitizenFX.Core.Native;
 using NativeUI;
 using MeneliaAPI.Client;
 
-namespace AdminMenus
+namespace Menelia.Client.AdminMenu
 {
     public class MainMenu : BaseScript
     {

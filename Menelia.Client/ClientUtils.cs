@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 using Menelia.Client.CallbackClasses;
+using MeneliaAPI.Entities;
 
 namespace MeneliaAPI.Client
 {
@@ -27,13 +28,50 @@ namespace MeneliaAPI.Client
         }
         public static void SendToAllCLients(String channel, params Object[] objects)
         {
-            TriggerServerEvent("MeneliaAPI:UpdateClient", channel, objects);
+            TriggerServerEvent("MeneliaAPI:UpdateClient", channel, objects.ToList());
         }
 
+        public static async Task<String> UpdatePlayerInfo(PlayerInfo pi)
+        {
+            PlayerInfoCallback p = new PlayerInfoCallback();
+            BaseScript.TriggerServerEvent("MeneliaAPI:UpdatePlayerInfo", pi.ToJson(), new Action<String>((Json) =>
+            {
+                p.Json = Json;
+                p.HasResponse = true;
+            }));
+            int i = 0;
+            while (true)
+            {
+                i++;
+                if (p.HasResponse || i > 1000)
+                    break;
+                await BaseScript.Delay(50);
+            }
+            return p.Json;
+        }
         public static async Task<String> GetPlayerInfo()
         {
             PlayerInfoCallback p = new PlayerInfoCallback();
             BaseScript.TriggerServerEvent("MeneliaAPI:GetPlayerInfo", GetPlayerServerId(PlayerId()), new Action<String>((Json) =>
+            {
+                p.Json = Json;
+                p.HasResponse = true;
+            }));
+            int i = 0;
+            while (true)
+            {
+                i++;
+                if (p.HasResponse || i > 1000)
+                    break;
+                await BaseScript.Delay(50);
+            }
+            return p.Json;
+        }
+
+        public static async Task<String> GetPlayerInfos()
+        {
+            PlayerInfoCallback p = new PlayerInfoCallback();
+            BaseScript.TriggerServerEvent("MeneliaAPI:GetPlayerInfos", new Action<String>((Json) =>
             {
                 p.Json = Json;
                 p.HasResponse = true;

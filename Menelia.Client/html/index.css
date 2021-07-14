@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'gta';
+    src: url('./pricedown_bl.otf');
+}
+
+.gta{
+    font-family: "gta" !important;
+}

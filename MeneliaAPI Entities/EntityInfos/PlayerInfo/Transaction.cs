@@ -9,15 +9,17 @@ namespace MeneliaAPI.Entities
 {
     public class Transaction
     {
-        DateTime date;
-        String description;
-        int amount;
+        public DateTime Date;
+        public String Receiver;
+        public String Description;
+        public int Amount;
 
-        public Transaction(DateTime date, String description, int amount)
+        public Transaction(DateTime Date, String Receiver, String Description, int Amount)
         {
-            this.date = date;
-            this.description = description;
-            this.amount = amount;
+            this.Date = Date;
+            this.Receiver = Receiver;
+            this.Description = Description;
+            this.Amount = Amount;
         }
     }
 }

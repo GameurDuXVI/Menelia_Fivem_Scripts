@@ -18,11 +18,11 @@ namespace MeneliaAPI.Server
             return PlayerInfo.playerInfos;
         }
 
-        public static void loadPlayersInfo()
+        public static String loadPlayersInfo(String file = "players.json")
         {
-            if (File.Exists("data.json"))
+            if (File.Exists("data/" + file))
             {
-                String json = File.ReadAllText("data.json");
+                String json = File.ReadAllText("data/" + file);
                 if (json.Length > 0)
                     PlayerInfo.playerInfos = PlayerInfo.ListFromJson(json);
             }
@@ -30,11 +30,13 @@ namespace MeneliaAPI.Server
             {
                 SavePlayersInfo();
             }
+            return file;
         }
 
-        public static void SavePlayersInfo()
+        public static String SavePlayersInfo(String file = "players.json")
         {
-            File.WriteAllText("data.json", PlayerInfo.ListToJson());
+            File.WriteAllText("data/" + file, PlayerInfo.ListToJson());
+            return file;
         }
 
         public static bool hasPlayerInfo(String name)
@@ -107,6 +109,22 @@ namespace MeneliaAPI.Server
                 }
             }
             return null;
+        }
+
+        public static bool UpdatePlayerInfoByIdentiefiers(List<String> identifiers, PlayerInfo pi)
+        {
+            try
+            {
+                PlayerInfo.playerInfos.Remove(getPlayerInfoByIdentiefiers(identifiers));
+                PlayerInfo.playerInfos.Add(pi);
+                return true;
+            }
+            catch(Exception e)
+            {
+                Log.error(e.Message);
+                Log.error(e.StackTrace);
+                return false;
+            }
         }
 
 

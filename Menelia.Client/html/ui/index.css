@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap');
+
+* {
+    font-family: Rubik !important;
+}
+
+#speedbar>circle, #speedbar_backbround>circle {
+    transition: 0.35s stroke-dashoffset;
+    transform: rotate(140deg);
+    transform-origin: 50% 50%;
+    stroke-linecap: round;
+    stroke-width: 10;
+}
+
+#speedbar, #speedbar_backbround {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, calc(-100% - 20px));
+}
+
+#speedbar>circle {
+    stroke: #835AB8;
+}
+
+#speedbar_backbround>circle {
+    stroke: rgba(255, 255, 255, 0.5);
+}
+
+#brakes, #lights, #speed, #maxspeed, #belt, #fuel, #key {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+}
+
+#brakes {
+    transform: translate(-50%, calc(-100% - 130px));
+}
+
+#lights {
+    transform: translate(calc(-50% - 30px), calc(-100% - 40px));
+}
+
+#belt {
+    transform: translate(calc(-50% + 10px), calc(-100% - 40px));
+}
+
+#fuel {
+    transform: translate(calc(-50% - 10px), calc(-100% - 40px));
+}
+
+#key {
+    transform: translate(calc(-50% + 30px), calc(-100% - 40px));
+}
+
+#speed {
+    transform: translate(-50%, calc(-100% - 80px));
+    color: white;
+    font-size: 35pt;
+}
+
+#maxspeed {
+    transform: translate(-50%, calc(-100% - 70px));
+    color: white;
+    font-size: 10pt;
+}
+
+#temp {
+    color: white;
+    position: absolute;
+    text-align: right;
+    padding: 20px;
+    width: 400px;
+    height: 100px;
+    top: 100%;
+    left: 100%;
+    transform: translate(-100%, calc(-100% - 20px));
+}
+
+*[red] > *, *[red] > * > *{
+    fill: #EF0E00;
+}
+
+*[green] > *, *[green] > * > * {
+    fill: #00E168;
+}
+
+*[opacity] > * {
+    opacity: 0.2;
+}
+
+*[transparent] > *, *[transparent] > * > * {
+    fill: transparent;
+}

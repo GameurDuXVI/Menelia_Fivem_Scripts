@@ -16,14 +16,23 @@ namespace MeneliaAPI.Entities
         public List<String> Identifiers;
         public Position Position;
         public Banking Banking;
+        public String FirstName;
+        public String LastName;
+        public int Cash;
 
         public PlayerInfo(List<String> Identifiers, String Name, float X, float Y, float Z, float Heading)
         {
+            List<String> TempIdentiefiers = new List<string>();
+            foreach (String Identifier in Identifiers)
+                if (!Identifier.Contains("ip:"))
+                    TempIdentiefiers.Add(Identifier);
+
             this.Id = NextId();
-            this.Identifiers = Identifiers;
+            this.Identifiers = TempIdentiefiers;
             this.Name = Name;
             this.Position = new Position(X, Y, Z, Heading);
             this.Banking = new Banking();
+            this.Cash = 0;
         }
 
         public static int NextId()

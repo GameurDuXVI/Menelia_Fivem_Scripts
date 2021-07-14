@@ -6,7 +6,7 @@ using CitizenFX.Core.UI;
 using NativeUI;
 using static CitizenFX.Core.Native.API;
 
-namespace AdminMenus
+namespace Menelia.Client.AdminMenu
 {
     public class VehiclesMenu
     {
@@ -53,7 +53,8 @@ namespace AdminMenus
             menu.ControlDisablingEnabled = false;
 
             CustomVehicles.Add(new CustomVehicle("polraiden", typeof(Vehicles.Emergency)));
-            CustomVehicles.Add(new CustomVehicle("riot", typeof(Vehicles.Emergency)));
+            CustomVehicles.Add(new CustomVehicle("menswat", typeof(Vehicles.Emergency)));
+            CustomVehicles.Add(new CustomVehicle("policegt350r", typeof(Vehicles.Emergency)));
 
             spawn(menu, "Batteaux", typeof(Vehicles.Boats), 10f);
             spawn(menu, "Camions", typeof(Vehicles.Commercials), 10f);

@@ -8,7 +8,7 @@ using static CitizenFX.Core.Native.API;
 using CitizenFX.Core.UI;
 using NativeUI;
 
-namespace AdminMenus
+namespace Menelia.Client.AdminMenu
 {
     class CharacterMenu
     {
@@ -22,6 +22,7 @@ namespace AdminMenus
 
             policeMenu(menu);
             weaponsMenu(menu);
+            teleportMenu(menu);
         }
 
         public void weaponsMenu(UIMenu supMenu)
@@ -199,6 +200,58 @@ namespace AdminMenus
                     Game.Player.WantedLevel = policeLevels[index];
                 }
             };
+        }
+
+        public void teleportMenu(UIMenu supMenu)
+        {
+            var menu = MainMenu.menuPool.AddSubMenu(supMenu, "Teleportation", "");
+            for (int i = 0; i < 1; i++) ;
+
+            menu.MouseEdgeEnabled = false;
+            menu.ControlDisablingEnabled = false;
+
+            foreach (Waypoints wp in Waypoints.waypoints)
+            {
+                var teleportItem = new UIMenuItem(wp.Name, "");
+                menu.AddItem(teleportItem);
+                menu.OnItemSelect += async (sender, item, index) =>
+                {
+                    if (item == teleportItem)
+                    {
+                        DoScreenFadeOut(500);
+
+                        while (IsScreenFadingOut())
+                        {
+                            await BaseScript.Delay(1);
+                        }
+
+                        SManager.Client.SManager.FreezePlayer(PlayerId(), true);
+                        SetPedDefaultComponentVariation(GetPlayerPed(-1));
+                        RequestCollisionAtCoord(wp.X, wp.Y, wp.Z);
+
+                        var ped = GetPlayerPed(-1);
+
+                        SetEntityCoordsNoOffset(ped, wp.X, wp.Y, wp.Z, false, false, false);
+                        NetworkResurrectLocalPlayer(wp.X, wp.Y, wp.Z, wp.Heading, true, true);
+                        ClearPedTasksImmediately(ped);
+                        ClearPlayerWantedLevel(PlayerId());
+
+                        while (!HasCollisionLoadedAroundEntity(ped))
+                        {
+                            await BaseScript.Delay(1);
+                        }
+
+                        DoScreenFadeIn(500);
+
+                        while (IsScreenFadingIn())
+                        {
+                            await BaseScript.Delay(1);
+                        }
+
+                        SManager.Client.SManager.FreezePlayer(PlayerId(), false);
+                    }
+                };
+            }
         }
     }
 }

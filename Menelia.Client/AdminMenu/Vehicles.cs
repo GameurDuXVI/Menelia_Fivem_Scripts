@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdminMenus
+namespace Menelia.Client.AdminMenu
 {
     public class CustomVehicle
     {

@@ -5,7 +5,10 @@ using System.Text;
 using System.Reflection;
 using System.Threading.Tasks;
 using CitizenFX.Core;
+using MeneliaAPI.Client;
 using static CitizenFX.Core.Native.API;
+using CitizenFX.Core.UI;
+using MeneliaAPI.Entities;
 
 namespace SManager.Client
 {
@@ -15,8 +18,22 @@ namespace SManager.Client
 
         public SManager()
         {
-            EventHandlers.Add("SManager:SpawningAction", new Action<int, float, float, float, float>(spawn));
-            TriggerServerEvent("SManager:SpawningReady", GetPlayerServerId(PlayerId()));
+            //EventHandlers.Add("SManager:SpawningAction", new Action<int, float, float, float, float>(spawn));
+            //TriggerServerEvent("SManager:SpawningReady", GetPlayerServerId(PlayerId()));
+            BaseScript.TriggerServerEvent("MeneliaAPI:SpawningReady", GetPlayerServerId(PlayerId()), new Action<String>((Json) =>
+            {
+                try
+                {
+                    PlayerInfo pi = PlayerInfo.FromJson(Json);
+                    SpawnPlayer("mp_m_fibsec_01", pi.Position.X, pi.Position.Y, pi.Position.Z, pi.Position.Heading);
+                }
+                catch (Exception e)
+                {
+                    Screen.ShowNotification("Un erreur est survenue !");
+                    Debug.WriteLine(e.Message);
+                    Debug.WriteLine(e.StackTrace);
+                }
+            }));
 
             Tick += onTick1000;
             Tick += onTick30000;
@@ -37,26 +54,32 @@ namespace SManager.Client
                 if (!IsPedInAnyVehicle(ped, true))
                     SetEntityCollision(ped, true, true);
 
+                SetCanAttackFriendly(PlayerPedId(), true, false);
+                NetworkSetFriendlyFireOption(true);
                 FreezeEntityPosition(ped, false);
                 //SetCharNeverTargetted(ped, false)
                 SetPlayerInvincible(playerId, false);
+                SetEntityInvincible(ped, false);
             }
             else
             {
                 if (IsEntityVisible(ped))
                     SetEntityVisible(ped, false, false);
 
+                SetCanAttackFriendly(PlayerPedId(), false, false);
+                NetworkSetFriendlyFireOption(false);
                 SetEntityCollision(ped, false, true);
                 FreezeEntityPosition(ped, true);
                 //SetCharNeverTargetted(ped, true)
                 SetPlayerInvincible(playerId, true);
+                SetEntityInvincible(ped, true);
 
                 if (IsPedFatallyInjured(ped))
                     ClearPedTasksImmediately(ped);
             }
         }
 
-        public async Task SpawnPlayer(string skin, float x, float y, float z, float heading)
+        public static async Task SpawnPlayer(string skin, float x, float y, float z, float heading)
         {
             await Delay(0);
             if (_spawnLock)
@@ -88,7 +111,6 @@ namespace SManager.Client
                 await Delay(1);
             }
 
-            ShutdownLoadingScreen();
             DoScreenFadeIn(500);
 
             while (IsScreenFadingIn())
@@ -96,18 +118,20 @@ namespace SManager.Client
                 await Delay(1);
             }
 
-            List<object> players = GetActivePlayers();
+            FreezePlayer(PlayerId(), false);
 
-            FreezePlayer(PlayerId(), false);            
+            await Delay(500);
+
+            ShutdownLoadingScreen();
 
             _spawnLock = false;
         }
-        public async void spawn(int serverId, float x, float y, float z, float heading)
+        /*public async void spawn(int serverId, float x, float y, float z, float heading)
         {
             if (GetPlayerServerId(PlayerId()) != serverId) return;
             await SpawnPlayer("mp_m_fibsec_01", x, y, z, heading);
             // 358 -589.5 28 250
-        }
+        }*/
 
         public async Task onTick1000()
         {
@@ -127,7 +151,7 @@ namespace SManager.Client
             await Delay(30000);
 
             Vector3 v = Game.Player.Character.Position;
-            TriggerServerEvent("SManager:save", GetPlayerServerId(PlayerId()), v.X, v.Y, v.Z);;
+            TriggerServerEvent("SManager:save", GetPlayerServerId(PlayerId()), v.X, v.Y, v.Z);
         }
     }
 }
