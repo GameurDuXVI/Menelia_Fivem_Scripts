@@ -15,13 +15,12 @@ namespace Menelia.Client.AdminMenu
         public ServerMenu(UIMenu mainMenu)
         {
             var menu = MainMenu.menuPool.AddSubMenu(mainMenu, "Server");
-            for (int i = 0; i < 1; i++) ;
 
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
 
-            Server.Weather now = Server.Weather.XMAS;
-            List<dynamic> weathers = new List<dynamic>();
+            var now = Server.Weather.XMAS;
+            var weathers = new List<dynamic>();
             foreach(Server.Weather weather in Enum.GetValues(typeof(Server.Weather)))
             {
                 if (GetNextWeatherType() == (int) weather) now = weather;
@@ -41,7 +40,7 @@ namespace Menelia.Client.AdminMenu
             timeMenu(menu);
         }
 
-        public void timeMenu(UIMenu supMenu)
+        private void timeMenu(UIMenu supMenu)
         {
             var menu = MainMenu.menuPool.AddSubMenu(supMenu, "Temps", "Permet de changer le temps du serveur");
             for (int i = 0; i < 1; i++) ;
@@ -49,23 +48,21 @@ namespace Menelia.Client.AdminMenu
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
 
-            List<dynamic> hours = new List<dynamic>();
-            for (int i = 0; i < 24; i++) hours.Add(i);
+            var hours = new List<dynamic>();
+            for (var i = 0; i < 24; i++) hours.Add(i);
 
-            var current_hour = 0;
-
+            var currentHour = 0;
             try
             {
-                current_hour = hours.IndexOf(World.CurrentDate.Hour);
+                currentHour = hours.IndexOf(World.CurrentDate.Hour);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
                 Debug.WriteLine(e.StackTrace);
             }
-
-
-            var hourItem = new UIMenuListItem("Heure", hours, current_hour);
+            
+            var hourItem = new UIMenuListItem("Heure", hours, currentHour);
             menu.AddItem(hourItem);
             menu.OnListChange += (sender, item, index) =>
             {
@@ -77,14 +74,14 @@ namespace Menelia.Client.AdminMenu
                 }
             };
 
-            List<dynamic> minutes = new List<dynamic>();
-            for (int i = 0; i < 60; i++) minutes.Add(i);
+            var minutes = new List<dynamic>();
+            for (var i = 0; i < 60; i++) minutes.Add(i);
 
-            var current_minute = 0;
+            var currentMinute = 0;
 
             try
             {
-                current_minute = minutes.IndexOf(World.CurrentDate.Minute);
+                currentMinute = minutes.IndexOf(World.CurrentDate.Minute);
             }
             catch (Exception e)
             {
@@ -92,7 +89,7 @@ namespace Menelia.Client.AdminMenu
                 Debug.WriteLine(e.StackTrace);
             }
 
-            var minutesItem = new UIMenuListItem("Minutes", minutes, current_minute);
+            var minutesItem = new UIMenuListItem("Minutes", minutes, currentMinute);
             menu.AddItem(minutesItem);
             menu.OnListChange += (sender, item, index) =>
             {

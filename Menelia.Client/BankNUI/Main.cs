@@ -1,28 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
-using CitizenFX.Core.Native;
-using MeneliaAPI.Client;
-using MeneliaAPI.Entities;
+using Menelia.Entities;
 using static CitizenFX.Core.Native.API;
-using Newtonsoft.Json;
 
-namespace BankNUI
+namespace Menelia.Client.BankNUI
 {
-    public class Main : BaseScript
+    public class Bank : BaseScript
     {
-        bool display = false;
-        public Main()
+        private bool _display;
+        public Bank()
         {
             RegisterCommand("bank", new Action<int, List<object>, string>((source, args, raw) =>
             {
-                setDisplay(!display);
+                setDisplay(!_display);
             }), false);
 
-            Tick += OnTick;
+            Tick += onTick;
 
             RegisterNuiCallbackType("main");
             EventHandlers["__cfx_nui:main"] += new Action(main);
@@ -33,11 +28,11 @@ namespace BankNUI
             {
                 if (data.TryGetValue("amount", out var obj))
                 {
-                    int amount = Convert.ToInt32(obj);
-                    PlayerInfo pi = PlayerInfo.FromJson(await ClientUtils.GetPlayerInfo());
+                    var amount = Convert.ToInt32(obj);
+                    var pi = PlayerInfo.fromJson(await ClientUtils.GetPlayerInfo());
                     if(pi.Banking.Money < amount)
                     {
-                        int diff = amount - pi.Banking.Money;
+                        var diff = amount - pi.Banking.Money;
                         pi.Banking.Money = 0;
                         pi.Cash += diff;
                         pi.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, pi.Name, "Retrait", -diff));
@@ -61,11 +56,11 @@ namespace BankNUI
             {
                 if (data.TryGetValue("amount", out var obj))
                 {
-                    int amount = Convert.ToInt32(obj);
-                    PlayerInfo pi = PlayerInfo.FromJson(await ClientUtils.GetPlayerInfo());
+                    var amount = Convert.ToInt32(obj);
+                    var pi = PlayerInfo.fromJson(await ClientUtils.GetPlayerInfo());
                     if (pi.Cash < amount)
                     {
-                        int diff = amount - pi.Cash;
+                        var diff = amount - pi.Cash;
                         pi.Cash -= amount;
                         pi.Banking.Money += diff;
                         pi.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, pi.Name, "Dépôt", diff));
@@ -88,36 +83,36 @@ namespace BankNUI
             RegisterNuiCallbackType("transfer");
             EventHandlers["__cfx_nui:transfer"] += new Action<IDictionary<string, object>, CallbackDelegate>(async (data, cb) =>
             {
-                if (data.TryGetValue("amount", out var ObjAmount) && data.TryGetValue("reason", out var ObjReason) && data.TryGetValue("receiver", out var ObjReceiver))
+                if (data.TryGetValue("amount", out var objAmount) && data.TryGetValue("reason", out var objReason) && data.TryGetValue("receiver", out var objReceiver))
                 {
-                    String Receiver = (String)ObjReceiver;
-                    int Amount = Convert.ToInt32(ObjAmount);
-                    String Reason = (String)ObjReason;
+                    var receiver = (string)objReceiver;
+                    var amount = Convert.ToInt32(objAmount);
+                    var reason = (string)objReason;
 
-                    List<PlayerInfo> PlayerInfos = PlayerInfo.ListFromJson(await ClientUtils.GetPlayerInfos());
-                    PlayerInfo Pi = PlayerInfo.FromJson(await ClientUtils.GetPlayerInfo());
+                    var playerInfos = PlayerInfo.listFromJson(await ClientUtils.GetPlayerInfos());
+                    var pi = PlayerInfo.fromJson(await ClientUtils.GetPlayerInfo());
 
-                    foreach (PlayerInfo PiR in PlayerInfos)
+                    foreach (var piR in playerInfos)
                     {
-                        if (PiR.Name.ToLower().Equals(Receiver.ToLower()))
+                        if (piR.Name.ToLower().Equals(receiver.ToLower()))
                         {
-                            if (Pi.Banking.Money < Amount)
+                            if (pi.Banking.Money < amount)
                             {
-                                int diff = Amount - Pi.Banking.Money;
-                                Pi.Banking.Money -= diff;
-                                PiR.Banking.Money += diff;
-                                Pi.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, PiR.Name, "Transaction", -diff));
-                                PiR.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, Pi.Name, "Transaction", diff));
+                                var diff = amount - pi.Banking.Money;
+                                pi.Banking.Money -= diff;
+                                piR.Banking.Money += diff;
+                                pi.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, piR.Name, "Transaction", -diff));
+                                piR.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, pi.Name, "Transaction", diff));
                             }
                             else
                             {
-                                Pi.Banking.Money -= Amount;
-                                PiR.Banking.Money += Amount;
-                                Pi.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, PiR.Name, "Transaction", -Amount));
-                                PiR.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, Pi.Name, "Transaction", Amount));
+                                pi.Banking.Money -= amount;
+                                piR.Banking.Money += amount;
+                                pi.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, piR.Name, "Transaction", -amount));
+                                piR.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, pi.Name, "Transaction", amount));
                             }
-                            await ClientUtils.UpdatePlayerInfo(PiR);
-                            await ClientUtils.UpdatePlayerInfo(Pi);
+                            await ClientUtils.UpdatePlayerInfo(piR);
+                            await ClientUtils.UpdatePlayerInfo(pi);
                             break;
                         }
                     }
@@ -132,38 +127,34 @@ namespace BankNUI
                 });
             });
 
-
-
-
-
             RegisterNuiCallbackType("close");
             EventHandlers["__cfx_nui:close"] += new Action(close);
         }
 
-        public void main()
+        private void main()
         {
             ClientUtils.SendChatMessage("", "main", 255, 0, 0);
         }
 
-        public void close()
+        private void close()
         {
             setDisplay(false);
         }
-        public async void setDisplay(bool display)
+        private async void setDisplay(bool display)
         {
             if (display)
             {
                 SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfo\", \"data\": " + await ClientUtils.GetPlayerInfo() + "}");
                 SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfos\", \"data\": " + await ClientUtils.GetPlayerInfos() + "}");
             }
-            this.display = display;
+            this._display = display;
             SetNuiFocus(display, display);
             SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"show\", \"data\": \"" + display + "\"}");
         }
 
-        public async Task OnTick()
+        private async Task onTick()
         {
-            /**
+            /*
                 HUD = 0;
                 HUD_WANTED_STARS = 1;
                 HUD_WEAPON_ICON = 2;
@@ -192,6 +183,7 @@ namespace BankNUI
             HideHudComponentThisFrame(3);
             HideHudComponentThisFrame(4);
             HideHudComponentThisFrame(13);
+            await Delay(0);
         }
     }
 }

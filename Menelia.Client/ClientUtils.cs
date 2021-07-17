@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 using Menelia.Client.CallbackClasses;
-using MeneliaAPI.Entities;
+using Menelia.Entities;
 
-namespace MeneliaAPI.Client
+namespace Menelia.Client
 {
     public class ClientUtils : BaseScript
     {
@@ -34,7 +33,7 @@ namespace MeneliaAPI.Client
         public static async Task<String> UpdatePlayerInfo(PlayerInfo pi)
         {
             PlayerInfoCallback p = new PlayerInfoCallback();
-            BaseScript.TriggerServerEvent("MeneliaAPI:UpdatePlayerInfo", pi.ToJson(), new Action<String>((Json) =>
+            BaseScript.TriggerServerEvent("MeneliaAPI:UpdatePlayerInfo", pi.toJson(), new Action<String>((Json) =>
             {
                 p.Json = Json;
                 p.HasResponse = true;

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CitizenFX.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\libs\CitizenFX.Core.Server.dll</HintPath>
+    </Reference>
     <Reference Include="CitizenFX.Core.Server">
       <HintPath>..\libs\CitizenFX.Core.Server.dll</HintPath>
     </Reference>
@@ -51,6 +54,12 @@
     <Compile Include="Server.cs" />
     <Compile Include="ServerUtils.cs" />
     <Compile Include="SManager\SManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MeneliaAPI Entities\MeneliaAPI Entities.csproj">
+      <Project>{7e5498f7-f6d4-4d20-ba10-1c016c9e79f0}</Project>
+      <Name>MeneliaAPI Entities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

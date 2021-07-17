@@ -1,30 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static CitizenFX.Core.Native.API;
-using CitizenFX.Core.UI;
+﻿using CitizenFX.Core.UI;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using NativeUI;
-using MeneliaAPI.Client;
 
 namespace Menelia.Client.AdminMenu
 {
     public class MainMenu : BaseScript
     {
-
         public static MenuPool menuPool;
-        public static UIMenu mainMenu;
+        private static UIMenu _mainMenu;
         public MainMenu()
         {
             menuPool = new MenuPool();
-            mainMenu = new UIMenu("Admin Panel", "DESC");
-            menuPool.Add(mainMenu);
-            new VehiclesMenu(mainMenu);
-            new ServerMenu(mainMenu);
-            new CharacterMenu(mainMenu);
+            _mainMenu = new UIMenu("Admin Panel", "DESC");
+            menuPool.Add(_mainMenu);
+            new VehiclesMenu(_mainMenu);
+            new ServerMenu(_mainMenu);
+            new CharacterMenu(_mainMenu);
 
             menuPool.MouseEdgeEnabled = false;
             menuPool.ControlDisablingEnabled = false;
@@ -40,11 +32,9 @@ namespace Menelia.Client.AdminMenu
                         Screen.ShowNotification("Vous n'avez pas la permission d'accéder à cette fonctionalité !");
                         return;
                     }
-                    mainMenu.Visible = !mainMenu.Visible;
+                    _mainMenu.Visible = !_mainMenu.Visible;
                 }
             };
         }
-
-        
     }
 }

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CitizenFX.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\libs\CitizenFX.Core.Client.dll</HintPath>
+    </Reference>
     <Reference Include="CitizenFX.Core.Client">
       <HintPath>..\libs\CitizenFX.Core.Client.dll</HintPath>
     </Reference>
@@ -38,6 +41,9 @@
       <HintPath>..\MeneliaAPI Entities\bin\Debug\MeneliaAPI_Entities.net.dll</HintPath>
     </Reference>
     <Reference Include="NativeUI">
+      <HintPath>..\libs\NativeUI.dll</HintPath>
+    </Reference>
+    <Reference Include="NativeUI, Version=1.7.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\libs\NativeUI.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -68,11 +74,17 @@
     <Compile Include="BankNUI\Main.cs" />
     <Compile Include="CommonNUI\Common.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SManager\SManager.cs" />
+    <Compile Include="SpawnManager\SManager.cs" />
     <Compile Include="Welcome\Welcome.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BankNUI\html\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MeneliaAPI Entities\MeneliaAPI Entities.csproj">
+      <Project>{7e5498f7-f6d4-4d20-ba10-1c016c9e79f0}</Project>
+      <Name>MeneliaAPI Entities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

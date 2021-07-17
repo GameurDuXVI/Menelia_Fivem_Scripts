@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Menelia.Client.AdminMenu
 {
-    class Weapons
+    public class Weapons
     {
         public enum Melee : uint
         {

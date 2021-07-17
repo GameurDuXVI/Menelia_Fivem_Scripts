@@ -8,13 +8,13 @@ namespace Menelia.Client.AdminMenu
 {
     public class CustomVehicle
     {
-        public String Name;
-        public Type Category;
+        public string name;
+        public Type category;
 
-        public CustomVehicle(String Name, Type Category)
+        public CustomVehicle(string name, Type category)
         {
-            this.Name = Name;
-            this.Category = Category;
+            this.name = name;
+            this.category = category;
         }
     }
     public class Vehicles

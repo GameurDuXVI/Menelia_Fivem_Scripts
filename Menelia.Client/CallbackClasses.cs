@@ -17,6 +17,6 @@ namespace Menelia.Client.CallbackClasses
 
     public class PlayerInfoCallback : CallbackClass
     {
-        public String Json = "";
+        public string Json = "";
     }
 }

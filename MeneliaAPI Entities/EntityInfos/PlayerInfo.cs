@@ -1,68 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
-namespace MeneliaAPI.Entities
+namespace Menelia.Entities
 {
     public class PlayerInfo : EntityInfo
     {
         public static List<PlayerInfo> playerInfos = new List<PlayerInfo>();
 
         public int Id;
-        public List<String> Identifiers;
+        public List<string> Identifiers;
         public Position Position;
         public Banking Banking;
-        public String FirstName;
-        public String LastName;
+        public string FirstName;
+        public string LastName;
         public int Cash;
 
-        public PlayerInfo(List<String> Identifiers, String Name, float X, float Y, float Z, float Heading)
+        public PlayerInfo(List<string> identifiers, string name, float x, float y, float z, float heading)
         {
-            List<String> TempIdentiefiers = new List<string>();
-            foreach (String Identifier in Identifiers)
-                if (!Identifier.Contains("ip:"))
-                    TempIdentiefiers.Add(Identifier);
+            var tempIdentiefiers = new List<string>();
+            foreach (var identifier in identifiers)
+                if (!identifier.Contains("ip:"))
+                    tempIdentiefiers.Add(identifier);
 
-            this.Id = NextId();
-            this.Identifiers = TempIdentiefiers;
-            this.Name = Name;
-            this.Position = new Position(X, Y, Z, Heading);
-            this.Banking = new Banking();
-            this.Cash = 0;
+            Id = nextId();
+            Identifiers = tempIdentiefiers;
+            Name = name;
+            Position = new Position(x, y, z, heading);
+            Banking = new Banking();
+            Cash = 0;
         }
 
-        public static int NextId()
+        public static int nextId()
         {
             for(int i = 0; ; i++)
                 if (playerInfos.ElementAtOrDefault(i) == null)
                     return i;
         }
 
-        public static PlayerInfo GetPlayerInfo(int Id)
+        public static PlayerInfo getPlayerInfo(int Id)
         {
             return playerInfos[Id];
         }
 
-        public String ToJson()
+        public String toJson()
         {
             return JsonConvert.SerializeObject(this); 
         }
 
-        public static PlayerInfo FromJson(String json)
+        public static PlayerInfo fromJson(String json)
         {
             return JsonConvert.DeserializeObject<PlayerInfo>(json);
         }
 
-        public static String ListToJson()
+        public static String listToJson()
         {
             return JsonConvert.SerializeObject(playerInfos);
         }
 
-        public static List<PlayerInfo> ListFromJson(String json)
+        public static List<PlayerInfo> listFromJson(String json)
         {
             return JsonConvert.DeserializeObject<List<PlayerInfo>>(json);
         }

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CitizenFX.Core;
-using MeneliaAPI.Entities;
-using MeneliaAPI.Server;
-using static CitizenFX.Core.Native.API;
+using Menelia.Entities;
+using Menelia.Server;
 
 namespace SManager.Server
 {
@@ -53,7 +50,7 @@ namespace SManager.Server
                         Log.info("Data not found, sending new requested data...");
                     }
                     //TriggerClientEvent("SManager:SpawningAction", ServerId, data.Position.X, data.Position.Y, data.Position.Z, data.Position.Heading);
-                    Callback.Invoke(data.ToJson());
+                    Callback.Invoke(data.toJson());
                 });
             }
             catch (Exception e)

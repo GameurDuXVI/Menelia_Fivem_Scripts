@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using static CitizenFX.Core.Native.API;
-using MeneliaAPI.Entities;
+using Menelia.Entities;
 
-namespace MeneliaAPI.Server
+namespace Menelia.Server
 {
     public class UpdateClientUtils : BaseScript
     {
@@ -22,9 +21,9 @@ namespace MeneliaAPI.Server
                 // GetPlayerInfo callback function to client response
                 EventHandlers["MeneliaAPI:UpdatePlayerInfo"] += new Action<String, NetworkCallbackDelegate>((Json, Callback) =>
                 {
-                    PlayerInfo pi = PlayerInfo.FromJson(Json);
+                    PlayerInfo pi = PlayerInfo.fromJson(Json);
                     ServerUtils.UpdatePlayerInfoByIdentiefiers(pi.Identifiers, pi);
-                    Callback.Invoke(ServerUtils.getPlayerInfoByIdentiefiers(pi.Identifiers).ToJson());
+                    Callback.Invoke(ServerUtils.getPlayerInfoByIdentiefiers(pi.Identifiers).toJson());
                 });
             }
             catch (Exception e)
@@ -38,7 +37,7 @@ namespace MeneliaAPI.Server
                 // GetPlayerInfo callback function to client response
                 EventHandlers["MeneliaAPI:GetPlayerInfo"] += new Action<int, NetworkCallbackDelegate>((ServerId, Callback) =>
                 {
-                    Callback.Invoke(ServerUtils.getPlayerInfoByIdentiefiers(ServerUtils.getPlayerByServerId(ServerId).Identifiers.ToList()).ToJson());
+                    Callback.Invoke(ServerUtils.getPlayerInfoByIdentiefiers(ServerUtils.getPlayerByServerId(ServerId).Identifiers.ToList()).toJson());
                 });
             } catch(Exception e)
             {
@@ -51,7 +50,7 @@ namespace MeneliaAPI.Server
                 // GetPlayerInfos callback function to client response
                 EventHandlers["MeneliaAPI:GetPlayerInfos"] += new Action<NetworkCallbackDelegate>((Callback) =>
                 {
-                    Callback.Invoke(PlayerInfo.ListToJson());
+                    Callback.Invoke(PlayerInfo.listToJson());
                 });
             }
             catch (Exception e)

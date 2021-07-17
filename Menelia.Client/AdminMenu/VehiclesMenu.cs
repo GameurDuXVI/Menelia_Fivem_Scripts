@@ -44,10 +44,9 @@ namespace Menelia.Client.AdminMenu
             godMenu(menu);
         }
 
-        public void spawnMenu(UIMenu supMenu)
+        private void spawnMenu(UIMenu supMenu)
         {
             var menu = MainMenu.menuPool.AddSubMenu(supMenu, "Spawn", "Permet de spawn un nouveau vehicule");
-            for (int i = 0; i < 1; i++) ;
 
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
@@ -81,7 +80,7 @@ namespace Menelia.Client.AdminMenu
             spawn(menu, "Vans", typeof(Vehicles.Vans), 5f);
         }
 
-        public void spawn(UIMenu supMenu, String optionName, Type classType, float distance)
+        private void spawn(UIMenu supMenu, string optionName, Type classType, float distance)
         {
             var menu = MainMenu.menuPool.AddSubMenu(supMenu, optionName);
             for (int i = 0; i < 1; i++) ;
@@ -119,11 +118,11 @@ namespace Menelia.Client.AdminMenu
                 };
             }
 
-            foreach(CustomVehicle cv in CustomVehicles)
+            foreach(var cv in CustomVehicles)
             {
-                if (cv.Category.Equals(classType))
+                if (cv.category.Equals(classType))
                 {
-                    String vehicleName = cv.Name;
+                    String vehicleName = cv.name;
                     var vehicleItem = new UIMenuItem(vehicleName, $"Spawn le véhicule: {vehicleName}");
                     menu.AddItem(vehicleItem);
                     menu.OnItemSelect += async (sender, item, index) =>
@@ -143,11 +142,10 @@ namespace Menelia.Client.AdminMenu
             }
         }
 
-        public void modificationMenu(UIMenu supMenu)
+        private void modificationMenu(UIMenu supMenu)
         {
             var menu = MainMenu.menuPool.AddSubMenu(supMenu, "Modification", "Permet la modification du vehicule actuel");
-            for (int i = 0; i < 1; i++) ;
-
+            
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
 
@@ -168,7 +166,7 @@ namespace Menelia.Client.AdminMenu
                     var sortedList = list.OrderBy(l => l.ToString());
 
                     if(veh == null)
-                        {
+                    {
                         Screen.ShowNotification("Vous n'êtes pas dans un vehicule !");
                         return;
                     }
@@ -205,11 +203,10 @@ namespace Menelia.Client.AdminMenu
             };
         }
 
-        public void styleMenu(UIMenu supMenu)
+        private void styleMenu(UIMenu supMenu)
         {
             var menu = MainMenu.menuPool.AddSubMenu(supMenu, "Style", "Permet de changer le style du vehicule");
-            for (int i = 0; i < 1; i++) ;
-
+            
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
 
@@ -252,39 +249,39 @@ namespace Menelia.Client.AdminMenu
                         }
                     };
 
-                    var PearlescentColorItem = new UIMenuListItem("PearlescentColor (EN)", colors, colors.IndexOf(veh.Mods.PearlescentColor));
-                    newMenu.AddItem(PearlescentColorItem);
+                    var pearlescentColorItem = new UIMenuListItem("PearlescentColor (EN)", colors, colors.IndexOf(veh.Mods.PearlescentColor));
+                    newMenu.AddItem(pearlescentColorItem);
                     newMenu.OnListChange += (sender, item, index) =>
                     {
-                        if (item == PearlescentColorItem)
+                        if (item == pearlescentColorItem)
                         {
                             veh.Mods.PearlescentColor = colors[index];
                         }
                     };
 
-                    var RimColorItem = new UIMenuListItem("RimColor (EN)", colors, colors.IndexOf(veh.Mods.RimColor));
-                    newMenu.AddItem(RimColorItem);
+                    var rimColorItem = new UIMenuListItem("RimColor (EN)", colors, colors.IndexOf(veh.Mods.RimColor));
+                    newMenu.AddItem(rimColorItem);
                     newMenu.OnListChange += (sender, item, index) =>
                     {
-                        if (item == RimColorItem)
+                        if (item == rimColorItem)
                         {
                             veh.Mods.RimColor = colors[index];
                         }
                     };
 
-                    var TrimColorItem = new UIMenuListItem("TrimColor (EN)", colors, colors.IndexOf(veh.Mods.TrimColor));
-                    newMenu.AddItem(TrimColorItem);
+                    var trimColorItem = new UIMenuListItem("TrimColor (EN)", colors, colors.IndexOf(veh.Mods.TrimColor));
+                    newMenu.AddItem(trimColorItem);
                     newMenu.OnListChange += (sender, item, index) =>
                     {
-                        if (item == TrimColorItem)
+                        if (item == trimColorItem)
                         {
                             veh.Mods.TrimColor = colors[index];
                         }
                     };
 
 
-                    List<dynamic> liscensePlatesStyles = new List<dynamic>();
-                    foreach (LicensePlateStyle obj in Enum.GetValues(typeof(LicensePlateStyle)))
+                    var liscensePlatesStyles = new List<dynamic>();
+                    foreach (var obj in Enum.GetValues(typeof(LicensePlateStyle)))
                         liscensePlatesStyles.Add(obj);
 
                     var liscensePlatesStyleItem = new UIMenuListItem("Style de plaque", liscensePlatesStyles, liscensePlatesStyles.IndexOf(veh.Mods.LicensePlateStyle));
@@ -298,8 +295,8 @@ namespace Menelia.Client.AdminMenu
                     };
 
 
-                    List<dynamic> wheelTypes = new List<dynamic>();
-                    foreach (VehicleWheelType obj in Enum.GetValues(typeof(VehicleWheelType)))
+                    var wheelTypes = new List<dynamic>();
+                    foreach (var obj in Enum.GetValues(typeof(VehicleWheelType)))
                         wheelTypes.Add(obj);
 
                     var wheelTypesItem = new UIMenuListItem("Types de roues", wheelTypes, wheelTypes.IndexOf(veh.Mods.WheelType));
@@ -330,11 +327,10 @@ namespace Menelia.Client.AdminMenu
             };
         }
 
-        public void godMenu(UIMenu supMenu)
+        private void godMenu(UIMenu supMenu)
         {
             var menu = MainMenu.menuPool.AddSubMenu(supMenu, "God", "Permet de changer l'invincibilité du véhicule");
-            for (int i = 0; i < 1; i++) ;
-
+            
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
 
@@ -356,7 +352,7 @@ namespace Menelia.Client.AdminMenu
 
                     var invincibleItem = new UIMenuCheckboxItem("Crash Test", UIMenuCheckboxStyle.Cross, veh.IsInvincible, "Change l'invicibilité du vehicule lors d'un crash (ne veut pas dire qu'elle ne serra pas déformé)"); ;
                     menu.AddItem(invincibleItem);
-                    menu.OnCheckboxChange += (sender, item, checked_) =>
+                    menu.OnCheckboxChange += (sender, item, isChecked) =>
                     {
                         if (item == invincibleItem)
                         {
@@ -364,96 +360,70 @@ namespace Menelia.Client.AdminMenu
                             {
                                 veh.Repair();
                             }
-                            veh.IsInvincible = checked_;
+                            veh.IsInvincible = isChecked;
                         }
                     };
 
                     var bulletItem = new UIMenuCheckboxItem("Par balles", UIMenuCheckboxStyle.Cross, veh.IsBulletProof, "Change la résistance par balle du vehicule"); ;
                     menu.AddItem(bulletItem);
-                    menu.OnCheckboxChange += (sender, item, checked_) =>
+                    menu.OnCheckboxChange += (sender, item, isChecked) =>
                     {
                         if (item == bulletItem)
                         {
-                            veh.IsBulletProof = checked_;
+                            veh.IsBulletProof = isChecked;
                         }
                     };
 
                     var collisionItem = new UIMenuCheckboxItem("Collisions", UIMenuCheckboxStyle.Cross, veh.IsCollisionEnabled, "Change la "); ;
                     menu.AddItem(collisionItem);
-                    menu.OnCheckboxChange += (sender, item, checked_) =>
+                    menu.OnCheckboxChange += (sender, item, isChecked) =>
                     {
                         if (item == collisionItem)
                         {
-                            veh.IsCollisionEnabled = checked_;
+                            veh.IsCollisionEnabled = isChecked;
                         }
                     };
 
                     var exlosionsItem = new UIMenuCheckboxItem("Explosions", UIMenuCheckboxStyle.Cross, veh.IsExplosionProof, "Change la résistance aux explosions"); ;
                     menu.AddItem(exlosionsItem);
-                    menu.OnCheckboxChange += (sender, item, checked_) =>
+                    menu.OnCheckboxChange += (sender, item, isChecked) =>
                     {
                         if (item == exlosionsItem)
                         {
-                            veh.IsExplosionProof = checked_;
+                            veh.IsExplosionProof = isChecked;
                         }
                     };
 
                     var fireItem = new UIMenuCheckboxItem("Feu", UIMenuCheckboxStyle.Cross, veh.IsFireProof, "Change la résistance au feu"); ;
                     menu.AddItem(fireItem);
-                    menu.OnCheckboxChange += (sender, item, checked_) =>
+                    menu.OnCheckboxChange += (sender, item, isChecked) =>
                     {
                         if (item == fireItem)
                         {
-                            veh.IsFireProof = checked_;
+                            veh.IsFireProof = isChecked;
                         }
                     };
 
                     var meleeItem = new UIMenuCheckboxItem("Melee", UIMenuCheckboxStyle.Cross, veh.IsMeleeProof, "Change la résistance aux dégats de melee"); ;
                     menu.AddItem(meleeItem);
-                    menu.OnCheckboxChange += (sender, item, checked_) =>
+                    menu.OnCheckboxChange += (sender, item, isChecked) =>
                     {
                         if (item == meleeItem)
                         {
-                            veh.IsMeleeProof = checked_;
+                            veh.IsMeleeProof = isChecked;
                         }
                     };
 
 
                     var onlyDamagedByPlayerItem = new UIMenuCheckboxItem("Dégats des non-joueurs", UIMenuCheckboxStyle.Cross, veh.IsOnlyDamagedByPlayer, "Change si les non-joueurs peuvent faire des dégats"); ;
                     menu.AddItem(onlyDamagedByPlayerItem);
-                    menu.OnCheckboxChange += (sender, item, checked_) =>
+                    menu.OnCheckboxChange += (sender, item, isChecked) =>
                     {
                         if (item == onlyDamagedByPlayerItem)
                         {
-                            veh.IsOnlyDamagedByPlayer = checked_;
+                            veh.IsOnlyDamagedByPlayer = isChecked;
                         }
                     };
-
-
-                    /*var wantedItem = new UIMenuCheckboxItem("Recherché", UIMenuCheckboxStyle.Cross, veh.IsWanted, "Change la valeur de recherche de la police"); ;
-                    menu.AddItem(wantedItem);
-                    menu.OnCheckboxChange += (sender, item, checked_) =>
-                    {
-                        if (item == wantedItem)
-                        {
-                            Screen.ShowNotification(veh.Passengers.Count() == 0? "No passagers" : "Some passagers");
-                            foreach (Ped ped in veh.Passengers)
-                            {
-                                if (!ped.IsPlayer) return; 
-                                Screen.ShowNotification("Is player");
-
-                                foreach (Player p in GetActivePlayers())
-                                {
-                                    if (p.Handle != ped.Handle) return;
-
-                                    p.WantedLevel = checked_? 5 : 0;
-                                    Screen.ShowNotification("Changed wanted level");
-                                }
-                            }
-                            Game.Player.WantedLevel = checked_ ? 5 : 0;
-                            veh.IsWanted = checked_;
-                        }
-                    };*/
                 }
             };
         }

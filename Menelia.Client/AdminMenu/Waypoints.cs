@@ -18,18 +18,18 @@ namespace Menelia.Client.AdminMenu
             new Waypoints("Mountain", 502.59f, 5603.7f, 797.91f, 78),
             new Waypoints("Military Base", -2052, 3154, 32, 227)
         };
-        public String Name;
+        public string Name;
         public float X;
         public float Y;
         public float Z;
         public float Heading;
-        public Waypoints(String Name, float X, float Y, float Z, float Heading)
+        public Waypoints(string name, float x, float y, float z, float heading)
         {
-            this.Name = Name;
-            this.X = X;
-            this.Y = Y;
-            this.Z = Z;
-            this.Heading = Heading;
+            Name = name;
+            X = x;
+            Y = y;
+            Z = z;
+            Heading = heading;
         }
 
         

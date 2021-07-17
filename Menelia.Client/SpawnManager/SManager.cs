@@ -1,31 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.Threading.Tasks;
 using CitizenFX.Core;
-using MeneliaAPI.Client;
 using static CitizenFX.Core.Native.API;
 using CitizenFX.Core.UI;
-using MeneliaAPI.Entities;
+using Menelia.Entities;
 
-namespace SManager.Client
+namespace Menelia.Client.SpawnManager
 {
     public class SManager : BaseScript
     {
-        private static bool _spawnLock = false;
+        private static bool _spawnLock;
 
         public SManager()
         {
-            //EventHandlers.Add("SManager:SpawningAction", new Action<int, float, float, float, float>(spawn));
-            //TriggerServerEvent("SManager:SpawningReady", GetPlayerServerId(PlayerId()));
-            BaseScript.TriggerServerEvent("MeneliaAPI:SpawningReady", GetPlayerServerId(PlayerId()), new Action<String>((Json) =>
+            BaseScript.TriggerServerEvent("MeneliaAPI:SpawningReady", GetPlayerServerId(PlayerId()), new Action<string>(async (json) =>
             {
                 try
                 {
-                    PlayerInfo pi = PlayerInfo.FromJson(Json);
-                    SpawnPlayer("mp_m_fibsec_01", pi.Position.X, pi.Position.Y, pi.Position.Z, pi.Position.Heading);
+                    var pi = PlayerInfo.fromJson(json);
+                    await spawnPlayer("mp_m_fibsec_01", pi.Position.X, pi.Position.Y, pi.Position.Z, pi.Position.Heading);
                 }
                 catch (Exception e)
                 {
@@ -40,7 +33,7 @@ namespace SManager.Client
         }
         
 
-        public static void FreezePlayer(int playerId, bool freeze)
+        public static void freezePlayer(int playerId, bool freeze)
         {
             var ped = GetPlayerPed(playerId);
 
@@ -79,7 +72,7 @@ namespace SManager.Client
             }
         }
 
-        public static async Task SpawnPlayer(string skin, float x, float y, float z, float heading)
+        private static async Task spawnPlayer(string skin, float x, float y, float z, float heading)
         {
             await Delay(0);
             if (_spawnLock)
@@ -94,7 +87,7 @@ namespace SManager.Client
                 await Delay(1);
             }
 
-            FreezePlayer(PlayerId(), true);
+            freezePlayer(PlayerId(), true);
             //await Game.Player.ChangeModel(GetHashKey(skin));
             SetPedDefaultComponentVariation(GetPlayerPed(-1));
             RequestCollisionAtCoord(x, y, z);
@@ -118,7 +111,7 @@ namespace SManager.Client
                 await Delay(1);
             }
 
-            FreezePlayer(PlayerId(), false);
+            freezePlayer(PlayerId(), false);
 
             await Delay(500);
 
@@ -126,14 +119,8 @@ namespace SManager.Client
 
             _spawnLock = false;
         }
-        /*public async void spawn(int serverId, float x, float y, float z, float heading)
-        {
-            if (GetPlayerServerId(PlayerId()) != serverId) return;
-            await SpawnPlayer("mp_m_fibsec_01", x, y, z, heading);
-            // 358 -589.5 28 250
-        }*/
 
-        public async Task onTick1000()
+        private async Task onTick1000()
         {
             await Delay(1000);
 
@@ -142,15 +129,15 @@ namespace SManager.Client
                 await Delay(3000);
                 DoScreenFadeOut(1000);
                 await Delay(1000);
-                await SpawnPlayer("", 358, -589.5f, 28, 250);
+                await spawnPlayer("", 358, -589.5f, 28, 250);
             }
         }
 
-        public async Task onTick30000()
+        private async Task onTick30000()
         {
             await Delay(30000);
 
-            Vector3 v = Game.Player.Character.Position;
+            var v = Game.Player.Character.Position;
             TriggerServerEvent("SManager:save", GetPlayerServerId(PlayerId()), v.X, v.Y, v.Z);
         }
     }

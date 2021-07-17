@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace MeneliaAPI.Entities
+namespace Menelia.Entities
 {
     public class EntityInfo
     {
-        public String Name;
+        public string Name;
     }
 }

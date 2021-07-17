@@ -1,14 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CitizenFX.Core;
-using MeneliaAPI.Entities;
-using CitizenFX.Core.Native;
+using Menelia.Entities;
 
-namespace MeneliaAPI.Server
+namespace Menelia.Server
 {
 
     public class ServerUtils
@@ -24,7 +20,7 @@ namespace MeneliaAPI.Server
             {
                 String json = File.ReadAllText("data/" + file);
                 if (json.Length > 0)
-                    PlayerInfo.playerInfos = PlayerInfo.ListFromJson(json);
+                    PlayerInfo.playerInfos = PlayerInfo.listFromJson(json);
             }
             else
             {
@@ -35,7 +31,7 @@ namespace MeneliaAPI.Server
 
         public static String SavePlayersInfo(String file = "players.json")
         {
-            File.WriteAllText("data/" + file, PlayerInfo.ListToJson());
+            File.WriteAllText("data/" + file, PlayerInfo.listToJson());
             return file;
         }
 
