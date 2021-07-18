@@ -14,16 +14,24 @@ namespace Menelia.Server
         public UpdateClientUtils()
         {
             ServerUtils.loadPlayersInfo();
-            EventHandlers["MeneliaAPI:UpdateClient"] += new Action<String, List<Object>>(ReturnToClient);
+            EventHandlers["MeneliaAPI:UpdateClient"] += new Action<string, List<object>>((channel, objects) =>
+            {
+                TriggerClientEvent(channel, objects);
+            });
+            
+            EventHandlers["MeneliaAPI:UpdateClientSpecific"] += new Action<string, int, List<object>>((channel, serverId, objects) =>
+            {
+                TriggerClientEvent(channel, serverId, objects);
+            });
 
             try
             {
                 // GetPlayerInfo callback function to client response
-                EventHandlers["MeneliaAPI:UpdatePlayerInfo"] += new Action<String, NetworkCallbackDelegate>((Json, Callback) =>
+                EventHandlers["MeneliaAPI:UpdatePlayerInfo"] += new Action<String, NetworkCallbackDelegate>((json, callback) =>
                 {
-                    PlayerInfo pi = PlayerInfo.fromJson(Json);
+                    var pi = PlayerInfo.fromJson(json);
                     ServerUtils.UpdatePlayerInfoByIdentiefiers(pi.Identifiers, pi);
-                    Callback.Invoke(ServerUtils.getPlayerInfoByIdentiefiers(pi.Identifiers).toJson());
+                    callback.Invoke(ServerUtils.getPlayerInfoByIdentiefiers(pi.Identifiers).toJson());
                 });
             }
             catch (Exception e)
@@ -35,9 +43,9 @@ namespace Menelia.Server
             try
             {
                 // GetPlayerInfo callback function to client response
-                EventHandlers["MeneliaAPI:GetPlayerInfo"] += new Action<int, NetworkCallbackDelegate>((ServerId, Callback) =>
+                EventHandlers["MeneliaAPI:GetPlayerInfo"] += new Action<int, NetworkCallbackDelegate>((serverId, callback) =>
                 {
-                    Callback.Invoke(ServerUtils.getPlayerInfoByIdentiefiers(ServerUtils.getPlayerByServerId(ServerId).Identifiers.ToList()).toJson());
+                    callback.Invoke(ServerUtils.getPlayerInfoByIdentiefiers(ServerUtils.getPlayerByServerId(serverId).Identifiers.ToList()).toJson());
                 });
             } catch(Exception e)
             {
@@ -48,9 +56,9 @@ namespace Menelia.Server
             try
             {
                 // GetPlayerInfos callback function to client response
-                EventHandlers["MeneliaAPI:GetPlayerInfos"] += new Action<NetworkCallbackDelegate>((Callback) =>
+                EventHandlers["MeneliaAPI:GetPlayerInfos"] += new Action<NetworkCallbackDelegate>((callback) =>
                 {
-                    Callback.Invoke(PlayerInfo.listToJson());
+                    callback.Invoke(PlayerInfo.listToJson());
                 });
             }
             catch (Exception e)
@@ -62,9 +70,9 @@ namespace Menelia.Server
             try
             {
                 // HasPermission callback function to client response
-                EventHandlers["MeneliaAPI:HasPermission"] += new Action<int, String, NetworkCallbackDelegate>((ServerId, Permission, Callback) =>
+                EventHandlers["MeneliaAPI:HasPermission"] += new Action<int, string, NetworkCallbackDelegate>((serverId, permission, callback) =>
                 {
-                    Callback.Invoke(API.IsPlayerAceAllowed(ServerUtils.getPlayerByServerId(ServerId).Handle, Permission));
+                    callback.Invoke(API.IsPlayerAceAllowed(ServerUtils.getPlayerByServerId(serverId).Handle, permission));
                 });
             }
             catch (Exception e)
@@ -80,10 +88,10 @@ namespace Menelia.Server
                 {
                     try
                     {
-                        String file;
+                        string file;
                         if (args.Count > 0)
                         {
-                            file = ServerUtils.SavePlayersInfo((String)args[0]);
+                            file = ServerUtils.SavePlayersInfo((string)args[0]);
                         }
                         else
                         {
@@ -106,10 +114,10 @@ namespace Menelia.Server
                 {
                     try
                     {
-                        String file;
+                        string file;
                         if (args.Count > 0)
                         {
-                            file = ServerUtils.loadPlayersInfo((String)args[0]);
+                            file = ServerUtils.loadPlayersInfo((string)args[0]);
                         }
                         else
                         {
@@ -129,12 +137,7 @@ namespace Menelia.Server
             Tick += onTick20000;
         }
 
-        private void ReturnToClient(String channel, List<Object> objects)
-        {
-            TriggerClientEvent(channel, objects);
-        }
-
-        public async Task onTick20000()
+        private static async Task onTick20000()
         {
             await Delay(20000);
             ServerUtils.SavePlayersInfo();

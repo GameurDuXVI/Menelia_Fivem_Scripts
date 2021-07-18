@@ -7,32 +7,31 @@ namespace Menelia.Client.AdminMenu
 {
     public class MainMenu : BaseScript
     {
-        public static MenuPool menuPool;
-        private static UIMenu _mainMenu;
+        public static MenuPool MenuPool;
         public MainMenu()
         {
-            menuPool = new MenuPool();
-            _mainMenu = new UIMenu("Admin Panel", "DESC");
-            menuPool.Add(_mainMenu);
-            new VehiclesMenu(_mainMenu);
-            new ServerMenu(_mainMenu);
-            new CharacterMenu(_mainMenu);
+            MenuPool = new MenuPool();
+            var mainMenu = new UIMenu("Admin Panel", "DESC");
+            MenuPool.Add(mainMenu);
+            new VehiclesMenu(mainMenu);
+            new ServerMenu(mainMenu);
+            new CharacterMenu(mainMenu);
 
-            menuPool.MouseEdgeEnabled = false;
-            menuPool.ControlDisablingEnabled = false;
-            menuPool.RefreshIndex();
+            MenuPool.MouseEdgeEnabled = false;
+            MenuPool.ControlDisablingEnabled = false;
+            MenuPool.RefreshIndex();
 
             Tick += async () =>
             {
-                menuPool.ProcessMenus();
-                if (API.IsControlJustPressed(0, 166) && !menuPool.IsAnyMenuOpen())
+                MenuPool.ProcessMenus();
+                if (API.IsControlJustPressed(0, 166) && !MenuPool.IsAnyMenuOpen())
                 {
-                    if (!await ClientUtils.HasPermission("menu.admin"))
+                    if (!await ClientUtils.hasPermission("menu.admin"))
                     {
                         Screen.ShowNotification("Vous n'avez pas la permission d'accéder à cette fonctionalité !");
                         return;
                     }
-                    _mainMenu.Visible = !_mainMenu.Visible;
+                    mainMenu.Visible = !mainMenu.Visible;
                 }
             };
         }

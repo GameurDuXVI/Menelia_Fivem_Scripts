@@ -14,14 +14,14 @@ namespace Menelia.Client.CommonNUI
         private bool _beltOn;
         private bool _wasInCar;
         private bool _inVehicle;
-        private bool _keyPressed;
+        //private bool _keyPressed;
         private bool _indicatorL;
         private bool _indicatorR;
         
         public Common()
         {
             Tick += onTick500;
-            Tick += BeltTick;
+            Tick += beltTick;
 
             RegisterCommand("engine", new Action<int, List<object>, string>((source, args, raw) =>
             {
@@ -72,8 +72,8 @@ namespace Menelia.Client.CommonNUI
                 {
                     _indicatorR = !_indicatorR;
                     _indicatorL = false;
-                    ClientUtils.SendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 1, _indicatorL);
-                    ClientUtils.SendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 0, _indicatorR);
+                    ClientUtils.sendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 1, _indicatorL);
+                    ClientUtils.sendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 0, _indicatorR);
                 }
             }), false);
             RegisterCommand("left_indicator", new Action<int, List<object>, string>((source, args, raw) =>
@@ -82,8 +82,8 @@ namespace Menelia.Client.CommonNUI
                 {
                     _indicatorL = !_indicatorL;
                     _indicatorR = false;
-                    ClientUtils.SendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 1, _indicatorL);
-                    ClientUtils.SendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 0, _indicatorR);
+                    ClientUtils.sendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 1, _indicatorL);
+                    ClientUtils.sendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 0, _indicatorR);
                 }
             }), false);
             RegisterCommand("up_indicator", new Action<int, List<object>, string>((source, args, raw) =>
@@ -100,12 +100,12 @@ namespace Menelia.Client.CommonNUI
                         _indicatorL = true;
                         _indicatorR = true;
                     }
-                    ClientUtils.SendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 1, _indicatorL);
-                    ClientUtils.SendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 0, _indicatorR);
+                    ClientUtils.sendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 1, _indicatorL);
+                    ClientUtils.sendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 0, _indicatorR);
                 }
             }), false);
-            ClientUtils.SendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 1, false);
-            ClientUtils.SendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 0, _indicatorR);
+            //ClientUtils.sendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 1, false);
+            //ClientUtils.sendToAllCLients("CommonNUI:ChangeVehicleIndicator", GetPlayerServerId(PlayerId()), 0, _indicatorR);
 
 
             RegisterKeyMapping("engine", "[Veh] Démarer/Éteindre le moteur", "keyboard", "i");
@@ -169,7 +169,7 @@ namespace Menelia.Client.CommonNUI
             return (vc >= 0 && vc <= 7) || (vc >= 9 && vc <= 12) || (vc >= 17 && vc <= 20);
         }
 
-        private async Task BeltTick()
+        private async Task beltTick()
         {
             var vehicleToEnter = GetVehiclePedIsTryingToEnter(GetPlayerPed(PlayerId()));
             if (DoesEntityExist(vehicleToEnter))

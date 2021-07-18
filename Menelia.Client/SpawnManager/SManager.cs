@@ -18,7 +18,7 @@ namespace Menelia.Client.SpawnManager
                 try
                 {
                     var pi = PlayerInfo.fromJson(json);
-                    await spawnPlayer("mp_m_fibsec_01", pi.Position.X, pi.Position.Y, pi.Position.Z, pi.Position.Heading);
+                    await spawnPlayer(pi.Position.X, pi.Position.Y, pi.Position.Z, pi.Position.Heading);
                 }
                 catch (Exception e)
                 {
@@ -72,7 +72,7 @@ namespace Menelia.Client.SpawnManager
             }
         }
 
-        private static async Task spawnPlayer(string skin, float x, float y, float z, float heading)
+        private static async Task spawnPlayer(float x, float y, float z, float heading)
         {
             await Delay(0);
             if (_spawnLock)
@@ -129,7 +129,7 @@ namespace Menelia.Client.SpawnManager
                 await Delay(3000);
                 DoScreenFadeOut(1000);
                 await Delay(1000);
-                await spawnPlayer("", 358, -589.5f, 28, 250);
+                await spawnPlayer(358, -589.5f, 28, 250);
             }
         }
 

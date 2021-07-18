@@ -63,7 +63,6 @@
   <ItemGroup>
     <Compile Include="AdminMenu\CharacterMenu.cs" />
     <Compile Include="AdminMenu\MainMenu.cs" />
-    <Compile Include="AdminMenu\Server.cs" />
     <Compile Include="AdminMenu\ServerMenu.cs" />
     <Compile Include="AdminMenu\Vehicles.cs" />
     <Compile Include="AdminMenu\VehiclesMenu.cs" />

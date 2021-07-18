@@ -29,7 +29,7 @@ namespace Menelia.Client.BankNUI
                 if (data.TryGetValue("amount", out var obj))
                 {
                     var amount = Convert.ToInt32(obj);
-                    var pi = PlayerInfo.fromJson(await ClientUtils.GetPlayerInfo());
+                    var pi = PlayerInfo.fromJson(await ClientUtils.getPlayerInfo());
                     if(pi.Banking.Money < amount)
                     {
                         var diff = amount - pi.Banking.Money;
@@ -43,7 +43,7 @@ namespace Menelia.Client.BankNUI
                         pi.Cash += amount;
                         pi.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, pi.Name, "Retrait", -amount));
                     }
-                    SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfo\", \"data\": " + await ClientUtils.UpdatePlayerInfo(pi) + "}");
+                    SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfo\", \"data\": " + await ClientUtils.updatePlayerInfo(pi) + "}");
                 }
 
                 cb(new {
@@ -57,7 +57,7 @@ namespace Menelia.Client.BankNUI
                 if (data.TryGetValue("amount", out var obj))
                 {
                     var amount = Convert.ToInt32(obj);
-                    var pi = PlayerInfo.fromJson(await ClientUtils.GetPlayerInfo());
+                    var pi = PlayerInfo.fromJson(await ClientUtils.getPlayerInfo());
                     if (pi.Cash < amount)
                     {
                         var diff = amount - pi.Cash;
@@ -71,7 +71,7 @@ namespace Menelia.Client.BankNUI
                         pi.Banking.Money += amount;
                         pi.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, pi.Name, "Dépôt", amount));
                     }
-                    SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfo\", \"data\": " + await ClientUtils.UpdatePlayerInfo(pi) + "}");
+                    SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfo\", \"data\": " + await ClientUtils.updatePlayerInfo(pi) + "}");
                 }
 
                 cb(new
@@ -89,8 +89,8 @@ namespace Menelia.Client.BankNUI
                     var amount = Convert.ToInt32(objAmount);
                     var reason = (string)objReason;
 
-                    var playerInfos = PlayerInfo.listFromJson(await ClientUtils.GetPlayerInfos());
-                    var pi = PlayerInfo.fromJson(await ClientUtils.GetPlayerInfo());
+                    var playerInfos = PlayerInfo.listFromJson(await ClientUtils.getPlayerInfos());
+                    var pi = PlayerInfo.fromJson(await ClientUtils.getPlayerInfo());
 
                     foreach (var piR in playerInfos)
                     {
@@ -111,13 +111,13 @@ namespace Menelia.Client.BankNUI
                                 pi.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, piR.Name, "Transaction", -amount));
                                 piR.Banking.Transactions.Insert(0, new Transaction(DateTime.Now, pi.Name, "Transaction", amount));
                             }
-                            await ClientUtils.UpdatePlayerInfo(piR);
-                            await ClientUtils.UpdatePlayerInfo(pi);
+                            await ClientUtils.updatePlayerInfo(piR);
+                            await ClientUtils.updatePlayerInfo(pi);
                             break;
                         }
                     }
 
-                    SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfo\", \"data\": " + await ClientUtils.GetPlayerInfo() + "}");
+                    SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfo\", \"data\": " + await ClientUtils.getPlayerInfo() + "}");
                     SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"page\", \"data\": \"bank-main-page\"}");
                 }
 
@@ -133,7 +133,7 @@ namespace Menelia.Client.BankNUI
 
         private void main()
         {
-            ClientUtils.SendChatMessage("", "main", 255, 0, 0);
+            ClientUtils.sendChatMessage("", "main", 255, 0, 0);
         }
 
         private void close()
@@ -144,8 +144,8 @@ namespace Menelia.Client.BankNUI
         {
             if (display)
             {
-                SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfo\", \"data\": " + await ClientUtils.GetPlayerInfo() + "}");
-                SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfos\", \"data\": " + await ClientUtils.GetPlayerInfos() + "}");
+                SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfo\", \"data\": " + await ClientUtils.getPlayerInfo() + "}");
+                SendNuiMessage("{\"ui\":\"BankNUI\", \"action\": \"update\", \"type\": \"playerinfos\", \"data\": " + await ClientUtils.getPlayerInfos() + "}");
             }
             this._display = display;
             SetNuiFocus(display, display);

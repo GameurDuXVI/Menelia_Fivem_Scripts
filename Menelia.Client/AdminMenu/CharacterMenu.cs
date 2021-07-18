@@ -2,31 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using CitizenFX.Core;
-using Menelia.Client.SpawnManager;
 using static CitizenFX.Core.Native.API;
 
 using NativeUI;
 
 namespace Menelia.Client.AdminMenu
 {
-    public class CharacterMenu
+    public class CharacterMenu : BaseScript
     {
         public CharacterMenu(UIMenu mainMenu)
         {
-            var menu = MainMenu.menuPool.AddSubMenu(mainMenu, "Personnage");
+            var menu = MainMenu.MenuPool.AddSubMenu(mainMenu, "Personnage");
 
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
+            
+            EventHandlers["AdminPanel:Teleport"] += new Action<int, List<object>>((serverId, objects) =>
+            {
+                if (GetPlayerServerId(PlayerId()) == serverId)
+                {
+                    ClientUtils.teleport((float)objects[0], (float)objects[1], (float)objects[2], (float)objects[3]);
+                }
+            });
 
-            policeMenu(menu);
+            //policeMenu(menu);
             weaponsMenu(menu);
-            teleportMenu(menu);
+            //teleportMenu(menu);
+            playersMenu(menu);
         }
 
-        private void weaponsMenu(UIMenu supMenu)
+        private static void weaponsMenu(UIMenu supMenu)
         {
-            var menu = MainMenu.menuPool.AddSubMenu(supMenu, "Armes", "Accède aux armes");
-            for (int i = 0; i < 1; i++) ;
+            var menu = MainMenu.MenuPool.AddSubMenu(supMenu, "Armes", "Accède aux armes");
 
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
@@ -76,7 +83,7 @@ namespace Menelia.Client.AdminMenu
             addWeaponCategoryItem(menu, "Melee", typeof(Weapons.Melee));
             addWeaponCategoryItem(menu, "HandGuns", typeof(Weapons.HandGuns));
             addWeaponCategoryItem(menu, "Machine Guns", typeof(Weapons.Machine_Guns));
-            addWeaponCategoryItem(menu, "Assault_Rifles", typeof(Weapons.Assault_Rifles));
+            addWeaponCategoryItem(menu, "Assault Rifles", typeof(Weapons.Assault_Rifles));
             addWeaponCategoryItem(menu, "Equipement", typeof(Weapons.Equipement));
             addWeaponCategoryItem(menu, "Heavy Weapons", typeof(Weapons.Heavy_Weapons));
             addWeaponCategoryItem(menu, "Parachute", typeof(Weapons.Parachute));
@@ -85,14 +92,14 @@ namespace Menelia.Client.AdminMenu
             addWeaponCategoryItem(menu, "Thrown Weapons", typeof(Weapons.Thrown_Weapons));
         }
 
-        private void addWeaponCategoryItem(UIMenu supMenu, string optionName, Type classType)
+        private static void addWeaponCategoryItem(UIMenu supMenu, string optionName, Type classType)
         {
-            var menu = MainMenu.menuPool.AddSubMenu(supMenu, optionName);
+            var menu = MainMenu.MenuPool.AddSubMenu(supMenu, optionName);
 
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
 
-            List<Object> list = new List<object>();
+            var list = new List<object>();
             foreach (Object obj in Enum.GetValues(classType))
             {
                 list.Add(obj);
@@ -109,8 +116,7 @@ namespace Menelia.Client.AdminMenu
                     var current = Game.PlayerPed.Weapons.Current;
                     foreach (Object obj in sortedList)
                     {
-                        WeaponHash wh;
-                        Enum.TryParse<WeaponHash>(Enum.GetName(classType, obj), out wh);
+                        Enum.TryParse(Enum.GetName(classType, obj), out WeaponHash wh);
                         if (!Game.PlayerPed.Weapons.HasWeapon(wh))
                         {
                             var wp = Game.PlayerPed.Weapons.Give(wh, 250, false, true);
@@ -131,8 +137,7 @@ namespace Menelia.Client.AdminMenu
                     var current = Game.PlayerPed.Weapons.Current;
                     foreach (var obj in sortedList)
                     {
-                        WeaponHash wh;//= (WeaponHash) Enum.TryParse(typeof(WeaponHash), vehicleName);
-                        Enum.TryParse<WeaponHash>(Enum.GetName(classType, obj), out wh);
+                        Enum.TryParse(Enum.GetName(classType, obj), out WeaponHash wh);
                         if (Game.PlayerPed.Weapons.HasWeapon(wh))
                         {
                             var wp = Game.PlayerPed.Weapons[wh];
@@ -163,48 +168,122 @@ namespace Menelia.Client.AdminMenu
             }
         }
 
-        private void policeMenu(UIMenu supMenu)
+        private static void policeMenu(UIMenu supMenu, int playerId)
         {
-            var menu = MainMenu.menuPool.AddSubMenu(supMenu, "Police", "");
+            var menu = MainMenu.MenuPool.AddSubMenu(supMenu, "Police", "");
             
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
 
-            bool ignoreByPolice = false;
-
-            var ignoreItem = new UIMenuCheckboxItem("Ignoré par la police", UIMenuCheckboxStyle.Cross, ignoreByPolice, "");
+            /*var ignoreItem = new UIMenuCheckboxItem("Ignoré par la police (non fonctionnel)", UIMenuCheckboxStyle.Cross, false, "");
             menu.AddItem(ignoreItem);
-            menu.OnCheckboxChange += (sender, item, checked_) =>
+            menu.OnCheckboxChange += (sender, item, isChecked) =>
             {
                 if (item == ignoreItem)
                 {
-                    Game.Player.IgnoredByPolice = checked_;
-                    ignoreByPolice = checked_;
+                    Game.Player.IgnoredByPolice = isChecked;
                 }
-            };
+            };*/
 
-            var policeLevels = new List<dynamic>();
-            for (var i = 0; i < 6; i++) policeLevels.Add(i);
-
-            var weaponsItem = new UIMenuListItem("Niveau de police", policeLevels, Game.Player.WantedLevel);
-            menu.AddItem(weaponsItem);
-            menu.OnListChange += (sender, item, index) =>
+            menu.OnMenuStateChanged += (oldMenu, newMenu, state) =>
             {
-                if (item == weaponsItem)
+                if (state == MenuState.Opened || state == MenuState.ChangeForward)
                 {
-                    Game.Player.WantedLevel = policeLevels[index];
+                    newMenu.Clear();
+                    
+                    var policeLevels = new List<dynamic>();
+                    for (var i = 0; i < 6; i++) policeLevels.Add(i);
+
+                    var weaponsItem = new UIMenuListItem("Niveau de police", policeLevels, GetPlayerWantedLevel(playerId));
+                    menu.AddItem(weaponsItem);
+                    menu.OnListChange += (sender, item, index) =>
+                    {
+                        if (item == weaponsItem)
+                        {
+                            SetPlayerWantedLevel(playerId, policeLevels[index], false);
+                        }
+                    };
                 }
             };
         }
 
-        private void teleportMenu(UIMenu supMenu)
+        private static void playersMenu(UIMenu supMenu)
         {
-            var menu = MainMenu.menuPool.AddSubMenu(supMenu, "Teleportation", "");
+            var menu = MainMenu.MenuPool.AddSubMenu(supMenu, "Joueurs", "");
 
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
 
-            foreach (var wp in Waypoints.waypoints)
+            menu.OnMenuStateChanged += (oldMenu, newMenu, state) =>
+            {
+                if (state == MenuState.Opened || state == MenuState.ChangeForward)
+                {
+                    newMenu.Clear();
+                    
+                    playerMenu(menu, PlayerId());
+                    
+                    int[] playersId = GetActivePlayers();
+                    foreach (var playerId in playersId)
+                    {
+                        if(playerId != PlayerId())
+                            playerMenu(menu, playerId);
+                    }
+                }
+            };
+        }
+
+        private static void playerMenu(UIMenu supMenu, int playerId)
+        {
+            var menu = MainMenu.MenuPool.AddSubMenu(supMenu, GetPlayerName(playerId), "");
+
+            menu.MouseEdgeEnabled = false;
+            menu.ControlDisablingEnabled = false;
+            
+            policeMenu(menu, playerId);
+            
+            var teleportToItem = new UIMenuItem("Se teleporter vers " + GetPlayerName(playerId), "");
+            menu.AddItem(teleportToItem);
+            menu.OnItemSelect += (sender, item, index) =>
+            {
+                if (item == teleportToItem)
+                {
+                    var loc = GetEntityCoords(GetPlayerPed(playerId), true);
+                    ClientUtils.teleport(loc.X, loc.Y, loc.Z, 0);
+                }
+            };
+            
+            teleportToLocMenu(menu, playerId);
+        }
+        
+        private static void teleportToLocMenu(UIMenu supMenu, int playerId)
+        {
+            var menu = MainMenu.MenuPool.AddSubMenu(supMenu, "Teleportation", "");
+
+            menu.MouseEdgeEnabled = false;
+            menu.ControlDisablingEnabled = false;
+
+            foreach (var wp in Waypoint.Waypoints)
+            {
+                var teleportToLocItem = new UIMenuItem(wp.Name , "");
+                menu.AddItem(teleportToLocItem);
+                menu.OnItemSelect += (sender, item, index) =>
+                {
+                    if (item == teleportToLocItem)
+                    {
+                        ClientUtils.sendToSecificPlayer("AdminPanel:Teleport", GetPlayerServerId(playerId), wp.X, wp.Y, wp.Z, wp.Heading);
+                    }
+                };
+            }
+        }
+
+        /*private static void teleportMenu(UIMenu supMenu)
+        {
+            var menu = MainMenu.MenuPool.AddSubMenu(supMenu, "Teleportation", "");
+
+            menu.MouseEdgeEnabled = false;
+            menu.ControlDisablingEnabled = false;
+
+            foreach (var wp in Waypoint.Waypoints)
             {
                 var teleportItem = new UIMenuItem(wp.Name, "");
                 menu.AddItem(teleportItem);
@@ -212,40 +291,10 @@ namespace Menelia.Client.AdminMenu
                 {
                     if (item == teleportItem)
                     {
-                        DoScreenFadeOut(500);
-
-                        while (IsScreenFadingOut())
-                        {
-                            await BaseScript.Delay(1);
-                        }
-
-                        SManager.freezePlayer(PlayerId(), true);
-                        SetPedDefaultComponentVariation(GetPlayerPed(-1));
-                        RequestCollisionAtCoord(wp.X, wp.Y, wp.Z);
-
-                        var ped = GetPlayerPed(-1);
-
-                        SetEntityCoordsNoOffset(ped, wp.X, wp.Y, wp.Z, false, false, false);
-                        NetworkResurrectLocalPlayer(wp.X, wp.Y, wp.Z, wp.Heading, true, true);
-                        ClearPedTasksImmediately(ped);
-                        ClearPlayerWantedLevel(PlayerId());
-
-                        while (!HasCollisionLoadedAroundEntity(ped))
-                        {
-                            await BaseScript.Delay(1);
-                        }
-
-                        DoScreenFadeIn(500);
-
-                        while (IsScreenFadingIn())
-                        {
-                            await BaseScript.Delay(1);
-                        }
-
-                        SManager.freezePlayer(PlayerId(), false);
+                        ClientUtils.teleport(wp.X, wp.Y, wp.Z, wp.Heading);
                     }
                 };
             }
-        }
+        }*/
     }
 }

@@ -14,14 +14,14 @@ namespace Menelia.Client.AdminMenu
     {
         public ServerMenu(UIMenu mainMenu)
         {
-            var menu = MainMenu.menuPool.AddSubMenu(mainMenu, "Server");
+            var menu = MainMenu.MenuPool.AddSubMenu(mainMenu, "Server");
 
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
 
-            var now = Server.Weather.XMAS;
+            var now = Weather.XMAS;
             var weathers = new List<dynamic>();
-            foreach(Server.Weather weather in Enum.GetValues(typeof(Server.Weather)))
+            foreach(Weather weather in Enum.GetValues(typeof(Weather)))
             {
                 if (GetNextWeatherType() == (int) weather) now = weather;
                 weathers.Add(weather);
@@ -33,16 +33,16 @@ namespace Menelia.Client.AdminMenu
             {
                 if (item == weatherItem)
                 {
-                    SetOverrideWeather(Enum.GetName(typeof(Server.Weather), weathers[index]));
+                    SetOverrideWeather(Enum.GetName(typeof(Weather), weathers[index]));
                 }
             };
 
             timeMenu(menu);
         }
 
-        private void timeMenu(UIMenu supMenu)
+        private static void timeMenu(UIMenu supMenu)
         {
-            var menu = MainMenu.menuPool.AddSubMenu(supMenu, "Temps", "Permet de changer le temps du serveur");
+            var menu = MainMenu.MenuPool.AddSubMenu(supMenu, "Temps", "Permet de changer le temps du serveur");
             for (int i = 0; i < 1; i++) ;
 
             menu.MouseEdgeEnabled = false;
@@ -61,7 +61,7 @@ namespace Menelia.Client.AdminMenu
                 Debug.WriteLine(e.Message);
                 Debug.WriteLine(e.StackTrace);
             }
-            
+
             var hourItem = new UIMenuListItem("Heure", hours, currentHour);
             menu.AddItem(hourItem);
             menu.OnListChange += (sender, item, index) =>
@@ -101,5 +101,25 @@ namespace Menelia.Client.AdminMenu
                 }
             };
         }
+    }
+    
+    enum Weather
+    {
+        EXTRASUNNY = -1750463879,
+        Neutral = -1530260698,
+        XMAS = -1429616491,
+        FOGGY = -1368164796,
+        THUNDER = -1233681761,
+        OVERCAST = -1148613331,
+        Halloween = -921030142,
+        //Snowing = -273223690,
+        //Unknown = -1,
+        SMOG = 282916021,
+        SNOWLIGHT = 603685163,
+        BLIZZARD = 669657108,
+        CLOUDS = 821931868,
+        CLEAR = 916995460,
+        RAIN = 1420204096,
+        CLEARING = 1840358669
     }
 }
