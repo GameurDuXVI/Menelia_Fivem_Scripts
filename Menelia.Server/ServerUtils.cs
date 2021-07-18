@@ -9,12 +9,14 @@ namespace Menelia.Server
 
     public class ServerUtils
     {
-        public static List<PlayerInfo> GetPlayerInfos()
+        private static PlayerList _pl = new PlayerList();
+        
+        public static List<PlayerInfo> getPlayerInfos()
         {
             return PlayerInfo.playerInfos;
         }
 
-        public static String loadPlayersInfo(String file = "players.json")
+        public static string loadPlayersInfo(String file = "players.json")
         {
             if (File.Exists("data/" + file))
             {
@@ -24,20 +26,20 @@ namespace Menelia.Server
             }
             else
             {
-                SavePlayersInfo();
+                savePlayersInfo();
             }
             return file;
         }
 
-        public static String SavePlayersInfo(String file = "players.json")
+        public static string savePlayersInfo(String file = "players.json")
         {
             File.WriteAllText("data/" + file, PlayerInfo.listToJson());
             return file;
         }
 
-        public static bool hasPlayerInfo(String name)
+        public static bool hasPlayerInfo(string name)
         {
-            foreach (PlayerInfo playerInfo in GetPlayerInfos())
+            foreach (var playerInfo in getPlayerInfos())
             {
                 if (playerInfo.Name == name)
                 {
@@ -47,9 +49,9 @@ namespace Menelia.Server
             return false;
         }
 
-        public static PlayerInfo getPlayerInfo(String name)
+        public static PlayerInfo getPlayerInfo(string name)
         {
-            foreach (PlayerInfo playerInfo in GetPlayerInfos())
+            foreach (var playerInfo in getPlayerInfos())
             {
                 if (playerInfo.Name == name)
                 {
@@ -59,9 +61,9 @@ namespace Menelia.Server
             return null;
         }
 
-        public static bool hasPlayerInfoByIdentiefier(String identifier)
+        public static bool hasPlayerInfoByIdentiefier(string identifier)
         {
-            foreach (PlayerInfo playerInfo in GetPlayerInfos())
+            foreach (var playerInfo in getPlayerInfos())
             {
                 if (playerInfo.Identifiers.Contains(identifier))
                 {
@@ -71,9 +73,9 @@ namespace Menelia.Server
             return false;
         }
 
-        public static PlayerInfo getPlayerInfoByIdentiefier(String identifier)
+        public static PlayerInfo getPlayerInfoByIdentiefier(string identifier)
         {
-            foreach (PlayerInfo playerInfo in GetPlayerInfos())
+            foreach (var playerInfo in getPlayerInfos())
             {
                 if (playerInfo.Identifiers.Contains(identifier))
                 {
@@ -97,7 +99,7 @@ namespace Menelia.Server
 
         public static PlayerInfo getPlayerInfoByIdentiefiers(List<String> identifiers)
         {
-            foreach (String identifier in identifiers)
+            foreach (string identifier in identifiers)
             {
                 if (hasPlayerInfoByIdentiefier(identifier))
                 {
@@ -107,7 +109,7 @@ namespace Menelia.Server
             return null;
         }
 
-        public static bool UpdatePlayerInfoByIdentiefiers(List<String> identifiers, PlayerInfo pi)
+        public static bool updatePlayerInfoByIdentiefiers(List<string> identifiers, PlayerInfo pi)
         {
             try
             {
@@ -122,22 +124,20 @@ namespace Menelia.Server
                 return false;
             }
         }
-
-
-        private static PlayerList pl = new PlayerList();
-        public static void SendChatMessage(string title, string message, int r, int g, int b)
+        
+        public static void sendChatMessage(string title, string message, int r, int g, int b)
         {
             var msg = new Dictionary<string, object>
             {
                 ["color"] = new[] { r, g, b },
                 ["args"] = new[] { title, message }
             };
-            BaseScript.TriggerEvent("chat:addMessage", msg);
+            BaseScript.TriggerClientEvent("chat:addMessage", msg);
         }
 
         public static Player getPlayerByServerId(int serverId)
         {
-            foreach (Player p in pl)
+            foreach (var p in _pl)
             {
                 if (p.Handle.Equals(serverId.ToString()))
                 {
@@ -147,9 +147,9 @@ namespace Menelia.Server
             return null;
         }
 
-        public static Player getPlayerByPlayerHandle(String handle)
+        public static Player getPlayerByPlayerHandle(string handle)
         {
-            foreach (Player p in pl)
+            foreach (var p in _pl)
             {
                 if (p.Handle.Equals(handle))
                 {
@@ -160,7 +160,7 @@ namespace Menelia.Server
         }
         public static bool isOnline(int serverId)
         {
-            foreach (Player p in pl)
+            foreach (var p in _pl)
             {
                 if (p.Handle.Equals(serverId.ToString()))
                 {
@@ -169,9 +169,9 @@ namespace Menelia.Server
             }
             return false;
         }
-        public static bool isOnlineByHandle(String handle)
+        public static bool isOnlineByHandle(string handle)
         {
-            foreach (Player p in pl)
+            foreach (var p in _pl)
             {
                 if (p.Handle.Equals(handle))
                 {
@@ -181,23 +181,23 @@ namespace Menelia.Server
             return false;
         }
     }
-
+    
     public class Log
     {
-        public static void info(String message)
+        public static void info(string message)
         {
-            DateTime t = DateTime.Now;
+            var t = DateTime.Now;
             Debug.WriteLine($"\u001b[32m[INFO]\u001b[0m {t.Hour}:{t.Minute} => {message}");
         }
 
-        public static void warn(String message)
+        public static void warn(string message)
         {
-            DateTime t = DateTime.Now;
+            var t = DateTime.Now;
             Debug.WriteLine($"\u001b[33m[WARN]\u001b[0m {t.Hour}:{t.Minute} => {message}");
         }
-        public static void error(String message)
+        public static void error(string message)
         {
-            DateTime t = DateTime.Now;
+            var t = DateTime.Now;
             Debug.WriteLine($"\u001b[31m[ERROR]\u001b[0m {t.Hour}:{t.Minute} => {message}");
         }
     }

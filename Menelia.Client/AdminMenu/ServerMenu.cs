@@ -1,23 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
-using CitizenFX.Core.UI;
 using NativeUI;
 
 namespace Menelia.Client.AdminMenu
 {
-    class ServerMenu
+    public class ServerMenu : BaseScript
     {
         public ServerMenu(UIMenu mainMenu)
         {
-            var menu = MainMenu.MenuPool.AddSubMenu(mainMenu, "Server");
+            var menu = MainMenu.MenuPool.AddSubMenu(mainMenu, "Serveur");
 
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
+            
+            /*EventHandlers["AdminPanel:Weather"] += new Action<int, List<object>>((serverId, objects) =>
+            {
+                if (GetPlayerServerId(PlayerId()) == serverId)
+                {
+                    ClientUtils.teleport((float)objects[0], (float)objects[1], (float)objects[2], (float)objects[3]);
+                }
+            });*/
 
             var now = Weather.XMAS;
             var weathers = new List<dynamic>();

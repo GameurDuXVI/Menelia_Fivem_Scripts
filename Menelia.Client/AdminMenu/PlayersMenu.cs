@@ -8,11 +8,11 @@ using NativeUI;
 
 namespace Menelia.Client.AdminMenu
 {
-    public class CharacterMenu : BaseScript
+    public class PlayersMenu : BaseScript
     {
-        public CharacterMenu(UIMenu mainMenu)
+        public PlayersMenu(UIMenu mainMenu)
         {
-            var menu = MainMenu.MenuPool.AddSubMenu(mainMenu, "Personnage");
+            var menu = MainMenu.MenuPool.AddSubMenu(mainMenu, "Joueurs");
 
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
@@ -25,13 +25,25 @@ namespace Menelia.Client.AdminMenu
                 }
             });
 
-            //policeMenu(menu);
-            weaponsMenu(menu);
-            //teleportMenu(menu);
-            playersMenu(menu);
+            menu.OnMenuStateChanged += (oldMenu, newMenu, state) =>
+            {
+                if (state == MenuState.Opened || state == MenuState.ChangeForward)
+                {
+                    newMenu.Clear();
+                    
+                    playerMenu(menu, PlayerId());
+                    
+                    int[] playersId = GetActivePlayers();
+                    foreach (var playerId in playersId)
+                    {
+                        if(playerId != PlayerId())
+                            playerMenu(menu, playerId);
+                    }
+                }
+            };
         }
 
-        private static void weaponsMenu(UIMenu supMenu)
+        private static void weaponsMenu(UIMenu supMenu, int playerId)
         {
             var menu = MainMenu.MenuPool.AddSubMenu(supMenu, "Armes", "Accède aux armes");
 
@@ -44,17 +56,20 @@ namespace Menelia.Client.AdminMenu
             {
                 if (item == weaponsItem)
                 {
-                    var current = Game.PlayerPed.Weapons.Current;
+                    var current = (WeaponHash) Convert.ToUInt32(GetSelectedPedWeapon(playerId));
                     foreach (WeaponHash wh in Enum.GetValues(typeof(WeaponHash)))
                     {
                         if (!Game.PlayerPed.Weapons.HasWeapon(wh))
                         {
-                            var wp = Game.PlayerPed.Weapons.Give(wh, 250, false, true);
-                            wp.Ammo = wp.MaxAmmo;
+                            var ammo = 250;
+                            GetMaxAmmo(playerId, (uint)wh, ref ammo);
+                            GiveWeaponToPed(playerId, (uint)wh, ammo, false, false);
                         }
                     }
-                    if (current != null)
-                        Game.PlayerPed.Weapons.Select(current);
+                    if (Enum.IsDefined(typeof(WeaponHash), current))
+                    {
+                        SetCurrentPedWeapon(playerId, (uint) current, true);
+                    }
                 }
             };
 
@@ -80,19 +95,19 @@ namespace Menelia.Client.AdminMenu
 
             menu.AddItem(new UIMenuSeparatorItem());
 
-            addWeaponCategoryItem(menu, "Melee", typeof(Weapons.Melee));
-            addWeaponCategoryItem(menu, "HandGuns", typeof(Weapons.HandGuns));
-            addWeaponCategoryItem(menu, "Machine Guns", typeof(Weapons.Machine_Guns));
-            addWeaponCategoryItem(menu, "Assault Rifles", typeof(Weapons.Assault_Rifles));
-            addWeaponCategoryItem(menu, "Equipement", typeof(Weapons.Equipement));
-            addWeaponCategoryItem(menu, "Heavy Weapons", typeof(Weapons.Heavy_Weapons));
-            addWeaponCategoryItem(menu, "Parachute", typeof(Weapons.Parachute));
-            addWeaponCategoryItem(menu, "Shotguns", typeof(Weapons.Shotguns));
-            addWeaponCategoryItem(menu, "Sniper Rifles", typeof(Weapons.Sniper_Rifles));
-            addWeaponCategoryItem(menu, "Thrown Weapons", typeof(Weapons.Thrown_Weapons));
+            addWeaponCategoryItem(menu, "Melee", typeof(Weapons.Melee), playerId);
+            addWeaponCategoryItem(menu, "HandGuns", typeof(Weapons.HandGuns), playerId);
+            addWeaponCategoryItem(menu, "Machine Guns", typeof(Weapons.Machine_Guns), playerId);
+            addWeaponCategoryItem(menu, "Assault Rifles", typeof(Weapons.Assault_Rifles), playerId);
+            addWeaponCategoryItem(menu, "Equipement", typeof(Weapons.Equipement), playerId);
+            addWeaponCategoryItem(menu, "Heavy Weapons", typeof(Weapons.Heavy_Weapons), playerId);
+            addWeaponCategoryItem(menu, "Parachute", typeof(Weapons.Parachute), playerId);
+            addWeaponCategoryItem(menu, "Shotguns", typeof(Weapons.Shotguns), playerId);
+            addWeaponCategoryItem(menu, "Sniper Rifles", typeof(Weapons.Sniper_Rifles), playerId);
+            addWeaponCategoryItem(menu, "Thrown Weapons", typeof(Weapons.Thrown_Weapons), playerId);
         }
 
-        private static void addWeaponCategoryItem(UIMenu supMenu, string optionName, Type classType)
+        private static void addWeaponCategoryItem(UIMenu supMenu, string optionName, Type classType, int playerId)
         {
             var menu = MainMenu.MenuPool.AddSubMenu(supMenu, optionName);
 
@@ -113,18 +128,21 @@ namespace Menelia.Client.AdminMenu
             {
                 if (item == weaponsItem)
                 {
-                    var current = Game.PlayerPed.Weapons.Current;
-                    foreach (Object obj in sortedList)
+                    var current = (WeaponHash) Convert.ToUInt32(GetSelectedPedWeapon(playerId));
+                    foreach (var obj in sortedList)
                     {
                         Enum.TryParse(Enum.GetName(classType, obj), out WeaponHash wh);
                         if (!Game.PlayerPed.Weapons.HasWeapon(wh))
                         {
-                            var wp = Game.PlayerPed.Weapons.Give(wh, 250, false, true);
-                            wp.Ammo = wp.MaxAmmo;
-                        }    
+                            var ammo = 250;
+                            GetMaxAmmo(playerId, (uint)wh, ref ammo);
+                            GiveWeaponToPed(playerId, (uint)wh, ammo, false, false);
+                        }
                     }
-                    if(current != null)
-                        Game.PlayerPed.Weapons.Select(current);
+                    if (Enum.IsDefined(typeof(WeaponHash), current))
+                    {
+                        SetCurrentPedWeapon(playerId, (uint) current, true);
+                    }
                 }
             };
 
@@ -175,16 +193,6 @@ namespace Menelia.Client.AdminMenu
             menu.MouseEdgeEnabled = false;
             menu.ControlDisablingEnabled = false;
 
-            /*var ignoreItem = new UIMenuCheckboxItem("Ignoré par la police (non fonctionnel)", UIMenuCheckboxStyle.Cross, false, "");
-            menu.AddItem(ignoreItem);
-            menu.OnCheckboxChange += (sender, item, isChecked) =>
-            {
-                if (item == ignoreItem)
-                {
-                    Game.Player.IgnoredByPolice = isChecked;
-                }
-            };*/
-
             menu.OnMenuStateChanged += (oldMenu, newMenu, state) =>
             {
                 if (state == MenuState.Opened || state == MenuState.ChangeForward)
@@ -203,31 +211,6 @@ namespace Menelia.Client.AdminMenu
                             SetPlayerWantedLevel(playerId, policeLevels[index], false);
                         }
                     };
-                }
-            };
-        }
-
-        private static void playersMenu(UIMenu supMenu)
-        {
-            var menu = MainMenu.MenuPool.AddSubMenu(supMenu, "Joueurs", "");
-
-            menu.MouseEdgeEnabled = false;
-            menu.ControlDisablingEnabled = false;
-
-            menu.OnMenuStateChanged += (oldMenu, newMenu, state) =>
-            {
-                if (state == MenuState.Opened || state == MenuState.ChangeForward)
-                {
-                    newMenu.Clear();
-                    
-                    playerMenu(menu, PlayerId());
-                    
-                    int[] playersId = GetActivePlayers();
-                    foreach (var playerId in playersId)
-                    {
-                        if(playerId != PlayerId())
-                            playerMenu(menu, playerId);
-                    }
                 }
             };
         }
@@ -275,26 +258,5 @@ namespace Menelia.Client.AdminMenu
                 };
             }
         }
-
-        /*private static void teleportMenu(UIMenu supMenu)
-        {
-            var menu = MainMenu.MenuPool.AddSubMenu(supMenu, "Teleportation", "");
-
-            menu.MouseEdgeEnabled = false;
-            menu.ControlDisablingEnabled = false;
-
-            foreach (var wp in Waypoint.Waypoints)
-            {
-                var teleportItem = new UIMenuItem(wp.Name, "");
-                menu.AddItem(teleportItem);
-                menu.OnItemSelect += async (sender, item, index) =>
-                {
-                    if (item == teleportItem)
-                    {
-                        ClientUtils.teleport(wp.X, wp.Y, wp.Z, wp.Heading);
-                    }
-                };
-            }
-        }*/
     }
 }

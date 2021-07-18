@@ -15,7 +15,7 @@ namespace Menelia.Client.AdminMenu
             MenuPool.Add(mainMenu);
             new VehiclesMenu(mainMenu);
             new ServerMenu(mainMenu);
-            new CharacterMenu(mainMenu);
+            new PlayersMenu(mainMenu);
 
             MenuPool.MouseEdgeEnabled = false;
             MenuPool.ControlDisablingEnabled = false;

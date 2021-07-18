@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CitizenFX.Core;
 using Menelia.Entities;
-using Menelia.Server;
 
-namespace SManager.Server
+namespace Menelia.Server.SManager
 {
     public class SManager : BaseScript
     {
@@ -16,11 +15,11 @@ namespace SManager.Server
 
             try
             {
-                EventHandlers["MeneliaAPI:SpawningReady"] += new Action<int, NetworkCallbackDelegate>((ServerId, Callback) =>
+                EventHandlers["MeneliaAPI:SpawningReady"] += new Action<int, NetworkCallbackDelegate>((serverId, callback) =>
                 {
                     PlayerInfo data;
 
-                    Player player = ServerUtils.getPlayerByServerId(ServerId);
+                    var player = ServerUtils.getPlayerByServerId(serverId);
                     Log.info(player.Name);
 
                     foreach (String identiefier in player.Identifiers.ToList())
@@ -32,12 +31,12 @@ namespace SManager.Server
                     {
                         data = ServerUtils.getPlayerInfoByIdentiefiers(player.Identifiers.ToList());
 
-                        List<String> Identiefiers = new List<string>();
-                        foreach (String Identifier in player.Identifiers.ToList())
-                            if (!Identifier.Contains("ip:"))
-                                Identiefiers.Add(Identifier);
+                        var identiefiers = new List<string>();
+                        foreach (var identifier in player.Identifiers.ToList())
+                            if (!identifier.Contains("ip:"))
+                                identiefiers.Add(identifier);
 
-                        data.Identifiers = Identiefiers;
+                        data.Identifiers = identiefiers;
                         Log.info("Name: " + data.Name);
                         Log.info("Data found, sending from existing data...");
                         Log.info(data.Position.X + " " + data.Position.Y + " " + data.Position.Z + " " + data.Position.Heading);
@@ -45,12 +44,11 @@ namespace SManager.Server
                     else
                     {
                         data = new PlayerInfo(player.Identifiers.ToList(), player.Name, -1045f, -2751.5f, 21f, 325);
-                        ServerUtils.GetPlayerInfos().Add(data);
-                        ServerUtils.SavePlayersInfo();
+                        ServerUtils.getPlayerInfos().Add(data);
+                        ServerUtils.savePlayersInfo();
                         Log.info("Data not found, sending new requested data...");
                     }
-                    //TriggerClientEvent("SManager:SpawningAction", ServerId, data.Position.X, data.Position.Y, data.Position.Z, data.Position.Heading);
-                    Callback.Invoke(data.toJson());
+                    callback.Invoke(data.toJson());
                 });
             }
             catch (Exception e)
@@ -59,15 +57,13 @@ namespace SManager.Server
             }
         }
 
-        public void playerJoining(int ServerId)
+        public void playerJoining(int serverId)
         {
             PlayerInfo data;
 
-            PlayerList pl = new PlayerList();
+            var player = ServerUtils.getPlayerByServerId(serverId);
 
-            Player player = ServerUtils.getPlayerByServerId(ServerId);
-
-            foreach (String identiefier in player.Identifiers.ToList())
+            foreach (var identiefier in player.Identifiers.ToList())
             {
                 Log.info("   " + identiefier);
             }
@@ -83,32 +79,25 @@ namespace SManager.Server
             else
             {
                 data = new PlayerInfo(player.Identifiers.ToList() , player.Name, -1045f, -2751.5f, 21f, 325);
-                ServerUtils.GetPlayerInfos().Add(data);
-                ServerUtils.SavePlayersInfo();
+                ServerUtils.getPlayerInfos().Add(data);
+                ServerUtils.savePlayersInfo();
                 Log.info("Data not found, sending new requested data...");
                 
             }
-            TriggerClientEvent("SManager:SpawningAction", ServerId, data.Position.X, data.Position.Y, data.Position.Z, data.Position.Heading);
+            TriggerClientEvent("SManager:SpawningAction", serverId, data.Position.X, data.Position.Y, data.Position.Z, data.Position.Heading);
         }
-        public static void playerSavePosition(int ServerId, float X, float Y, float Z)
+        public static void playerSavePosition(int serverId, float x, float y, float z)
         {
-            if (!ServerUtils.hasPlayerInfoByIdentiefiers(ServerUtils.getPlayerByServerId(ServerId).Identifiers.ToList()))
+            if (!ServerUtils.hasPlayerInfoByIdentiefiers(ServerUtils.getPlayerByServerId(serverId).Identifiers.ToList()))
                 return;
 
-            Player p = ServerUtils.getPlayerByServerId(ServerId);
-            /*Log.info("Save: " + p.Name);
-            foreach (String iden in p.Identifiers.ToList())
-            {
-                Log.info("   " + iden);
-            }*/
+            var p = ServerUtils.getPlayerByServerId(serverId);
             if (ServerUtils.hasPlayerInfoByIdentiefiers(p.Identifiers.ToList()))
             {
-                PlayerInfo data = ServerUtils.getPlayerInfoByIdentiefiers(p.Identifiers.ToList());
-                //Log.info("   " + data.Name);
-                //Log.info("   " + data.Position.X + " " + data.Position.Y + " " + data.Position.Z);
-                data.Position.X = X;
-                data.Position.Y = Y + 1;
-                data.Position.Z = Z;
+                var data = ServerUtils.getPlayerInfoByIdentiefiers(p.Identifiers.ToList());
+                data.Position.X = x;
+                data.Position.Y = y + 1;
+                data.Position.Z = z;
             }
         }
     }    

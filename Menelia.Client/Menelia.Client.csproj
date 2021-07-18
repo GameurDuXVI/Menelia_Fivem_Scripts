@@ -61,7 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminMenu\CharacterMenu.cs" />
+    <Compile Include="AdminMenu\PlayersMenu.cs" />
     <Compile Include="AdminMenu\MainMenu.cs" />
     <Compile Include="AdminMenu\ServerMenu.cs" />
     <Compile Include="AdminMenu\Vehicles.cs" />

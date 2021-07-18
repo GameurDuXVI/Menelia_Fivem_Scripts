@@ -30,7 +30,7 @@ namespace Menelia.Server
                 EventHandlers["MeneliaAPI:UpdatePlayerInfo"] += new Action<String, NetworkCallbackDelegate>((json, callback) =>
                 {
                     var pi = PlayerInfo.fromJson(json);
-                    ServerUtils.UpdatePlayerInfoByIdentiefiers(pi.Identifiers, pi);
+                    ServerUtils.updatePlayerInfoByIdentiefiers(pi.Identifiers, pi);
                     callback.Invoke(ServerUtils.getPlayerInfoByIdentiefiers(pi.Identifiers).toJson());
                 });
             }
@@ -91,11 +91,11 @@ namespace Menelia.Server
                         string file;
                         if (args.Count > 0)
                         {
-                            file = ServerUtils.SavePlayersInfo((string)args[0]);
+                            file = ServerUtils.savePlayersInfo((string)args[0]);
                         }
                         else
                         {
-                            file = ServerUtils.SavePlayersInfo();
+                            file = ServerUtils.savePlayersInfo();
                         }
                         Log.info($"Sauvegarde des données effectué dans {file} !");
                     }
@@ -140,7 +140,7 @@ namespace Menelia.Server
         private static async Task onTick20000()
         {
             await Delay(20000);
-            ServerUtils.SavePlayersInfo();
+            ServerUtils.savePlayersInfo();
         }
     }
 }
